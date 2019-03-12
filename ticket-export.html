@@ -1,0 +1,72 @@
+<script type="text/javascript">
+    RED.nodes.registerType('ticket-export',{
+        category: 'REALTECH Dot4',
+        color: '#949890',
+        defaults: {
+            name: {
+				value:""
+			}
+			,  url: {
+				value: "",
+				required: true
+			  }
+			,  tenant: {
+				value: "",
+				required: true
+			  }
+        },
+		credentials: {
+		  username: {
+			type:"text",
+			required: true
+		  },
+		  password: {
+			type:"password",
+			required: true
+		  }
+		},
+        inputs:1,
+        outputs:1,
+        icon: "dot4.png",
+        label: function() {
+            return this.name||"ticket-export";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="ticket-export">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+	
+	<hr>
+  <h4>REALTECH .4</h4>
+  <hr>
+  <div class="form-row">
+    <label for="node-input-url"><i class="icon-globe"></i> URL</label>
+    <input type="text" id="node-input-url" placeholder="https://hub.dot4.de">
+  </div>
+  <div class="form-row">
+    <label for="node-input-tenant"><i class="icon-tag"></i> tenant</label>
+    <input type="text" id="node-input-tenant" placeholder="Musterfirma">
+  </div>
+  
+	  <hr>
+  <h5>Credentials</h5>
+  <hr>
+  <div class="form-row">
+    <label for="node-input-username"><i class="icon-user"></i> Username</label>
+    <input type="text" id="node-input-username" placeholder="max.mustermann@musterfirma.de">
+  </div>
+
+  <div class="form-row">
+    <label for="node-input-password"><i class="fa fa-key"></i> Password</label>
+    <input type="password" id="node-input-password">
+  </div>
+
+</script>
+
+<script type="text/x-red" data-help-name="ticket-export">
+    <p>export a tickets from REALTECH .4</p>
+</script>
