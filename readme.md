@@ -22,6 +22,8 @@ Registrierung des Moduls
 ## LDAP Queries
 
 https://ldapwiki.com/wiki/LDAP%20Query%20Basic%20Examples
+https://www.faq-o-matic.net/2002/09/21/active-directory-ldap-feldnamen/ welche felder koennen selektiert werden
+http://www.selfadsi.de/ads-attributes/user-userAccountControl.htm in binaer umwandeln und vorletzte Ziffer holen
 
 mail=*@dot4.de
 (objectclass=person)

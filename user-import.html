@@ -18,6 +18,10 @@
 				value: "",
 				required: true
 			  }
+			, person_or_user: {
+				value: "",
+				required: true
+			  }
         },
 		credentials: {
 		  username: {
@@ -52,7 +56,7 @@
     <input type="text" id="node-input-url" placeholder="https://hub.dot4.de">
   </div>
   <div class="form-row">
-    <label for="node-input-tenant"><i class="icon-tag"></i> tenant</label>
+    <label for="node-input-tenant"><i class="icon-tag"></i> Tenant</label>
     <input type="text" id="node-input-tenant" placeholder="Musterfirma">
   </div>
   
@@ -73,10 +77,17 @@
   <h5>Import</h5>
   <hr>
   <div class="form-row">
-    <label for="node-input-format"><i class="fa fa-wpforms"></i> Format</label>
+    <label for="node-input-format"><i class="fa fa-wpforms"></i> Data Format</label>
     <select id="node-input-format">
 	   <option value="activeDirectory" >Active Directory</option>
-	   <option value="dot4">Dot4</option>
+	   <option value="asNeeded">as needed</option>
+	</select>
+  </div>
+  <div class="form-row">
+    <label for="node-input-person_or_user"><i class="icon-user"></i> Object type</label>
+    <select id="node-input-person_or_user">
+	   <option value="user" >User (with login rights)</option>
+	   <option value="person">Person (as CI only)</option>
 	</select>
   </div>
   

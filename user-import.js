@@ -77,6 +77,11 @@ module.exports = function(RED) {
 						throw new Error("missing user parameters/mapping")
 					}
 					
+					if(_.get(config,"person_or_user")=="person") {
+						dot4user.userId_PERS = null
+						dot4user.userExisting_PERS = null
+					}
+					
 					node.log(`uploading/updating in dot4: ${dot4user.firstName} ${dot4user.lastName}`)
 					
 					node.status({fill:"blue",shape:"ring",text:`uploading ${dot4user.lastName}`});
