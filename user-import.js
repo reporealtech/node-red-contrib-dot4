@@ -39,7 +39,8 @@ module.exports = function(RED) {
 				//node.log(JSON.stringify(userManagementApi))
 
 				let uploadArray=msg.payload
-				, cntUser=0
+				, cnt_successfullyImportedUsers=0
+				, uploadResult
 				;
 				
 				if(_.get(config,"format")=="activeDirectory" && _.get(msg,"payload.users")) {
@@ -59,10 +60,11 @@ module.exports = function(RED) {
 							email: userParams.mail
 							, firstName: userParams.givenName
 							, lastName: userParams.sn
-							, personnelNumber: userParams.employeeNumber || userParams.employeeID
+							, personnelNumber: userParams.employeeID
 							, isDeactivated: parseInt(userParams.userAccountControl,10).toString(2).substr(-2).substr(0,1) == '1' //http://www.selfadsi.de/ads-attributes/user-userAccountControl.htm in binaer umwandeln und vorletzte Ziffer holen
 							, faxBusiness: userParams.facsimileTelephoneNumber
-							, description: userParams.description
+							, description: userParams.displayName
+							, name: userParams.displayName
 						}
 						if(userParams.telephoneNumber)
 							dot4user.telephoneNumbersBusiness=[userParams.telephoneNumber]
@@ -85,15 +87,23 @@ module.exports = function(RED) {
 					node.log(`uploading/updating in dot4: ${dot4user.firstName} ${dot4user.lastName}`)
 					
 					node.status({fill:"blue",shape:"ring",text:`uploading ${dot4user.lastName}`});
-					await userManagementApi.upsertPerson(dot4user);
-					cntUser++;
+					uploadResult=await userManagementApi.upsertPerson(dot4user);
+					if(uploadResult instanceof Error) {
+						node.log(uploadResult.message)
+					} else {
+						cnt_successfullyImportedUsers++;
+					}
 				}
-				msg.payload=`imported ${cntUser} user(s) into dot4`
-				node.send(msg);
+				msg.payload=`imported ${cnt_successfullyImportedUsers}/${uploadArray.length} user(s) into dot4`
 				node.log(msg.payload)
-				node.status({fill:"green",shape:"dot",text:"finished"});
+				node.send(msg);
+				
+				if( cnt_successfullyImportedUsers == uploadArray.length)
+					node.status({fill:"green",shape:"dot",text:"finished"});
+				else
+					node.status({fill:"red",shape:"dot",text: _.get(uploadResult,"message") || "finished with error(s)"});
 			} catch(e) {
-				node.status({fill:"red",shape:"dot",text: ''+e});
+				node.status({fill:"red",shape:"dot",text: _.get(e,"message") || "ERROR"});
 			}
         });
     }
