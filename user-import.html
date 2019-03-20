@@ -22,6 +22,14 @@
 				value: "",
 				required: true
 			  }
+			, supervisor_attr_name: {
+				value: "",
+				required: false
+			  }
+			  , supervisor_attr_refname: {
+				value: "",
+				required: false
+			  }
         },
 		credentials: {
 		  username: {
@@ -90,10 +98,24 @@
 	   <option value="person">Person (as CI only)</option>
 	</select>
   </div>
+  <div class="form-row">
+    <label for="node-input-supervisor_attr"><i class="icon-tag"></i> (Supervisor Attribute Name)</label>
+    <input type="text" id="node-input-supervisor_attr_name" placeholder="manager">
+  </div>
+  <div class="form-row">
+    <label for="node-input-supervisor_attr"><i class="icon-tag"></i> (Supervisor Attribute Reference)</label>
+    <input type="text" id="node-input-supervisor_attr_refname" placeholder="distinguishedName">
+  </div>
   
 
 </script>
 
 <script type="text/x-red" data-help-name="user-import">
     <p>import users into dot4, e.g. from an active directory</p>
+</script>
+
+<script>
+	$( document ).ready(function() {
+		console.log( "ready!" );
+	});
 </script>
