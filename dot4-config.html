@@ -1,0 +1,85 @@
+<script type="text/javascript">
+    RED.nodes.registerType('dot4-config',{
+        category: 'config',
+        defaults: {
+		  username: {
+			value:"",
+			required: true
+		  },
+            url: {
+				value: "https://hub.dot4.de",
+				required: true
+			  }
+			,  tenant: {
+				value: "",
+				required: true
+			  }
+        },
+		credentials: {
+		  password: {
+			type:"password",
+			required: true
+		  }
+		},
+        label: function() {
+			let hub=this.url
+			if(hub.match(/.*?\/\/(.*?)\./))
+				hub=RegExp.$1;
+				
+            return `${hub}: ${this.tenant}, ${this.username}` //
+        },
+        exportable: false,
+        oneditsave: function() {
+			$.each( $("input[id^='node-config-input-']"), function () {
+			  //alert( $(this).hide() );
+			  let v=$(this).val().trim();
+			  $(this).val(v)
+			});
+			
+            /*var trimFields = [
+                "url",
+                "tenant",
+                "username",
+                "password"
+            ];
+            // Just in case any whitespace has crept in with the copy-paste of the fields
+            trimFields.forEach(function(field) {
+                var v = $("#node-config-input-"+field).val();
+                v = v.trim();
+                $("#node-config-input-"+field).val(v);
+            });*/
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="dot4-config">
+	
+  <h4>REALTECH .4</h4>
+  <hr>
+  <div class="form-row">
+    <label for="node-config-input-url"><i class="icon-globe"></i> URL</label>
+    <input type="text" id="node-config-input-url" placeholder="https://hub.dot4.de">
+  </div>
+  <div class="form-row">
+    <label for="node-config-input-tenant"><i class="icon-tag"></i> tenant</label>
+    <input type="text" id="node-config-input-tenant" placeholder="Musterfirma">
+  </div>
+  
+	  <hr>
+  <h5>Credentials</h5>
+  <hr>
+  <div class="form-row">
+    <label for="node-config-input-username"><i class="icon-user"></i> Username</label>
+    <input type="text" id="node-config-input-username" placeholder="max.mustermann@musterfirma.de">
+  </div>
+
+  <div class="form-row">
+    <label for="node-config-input-password"><i class="fa fa-key"></i> Password</label>
+    <input type="password" id="node-config-input-password">
+  </div>
+
+</script>
+
+<script type="text/x-red" data-help-name="dot4-config">
+    <p>Configuration for REALTECH .4</p>
+</script>
