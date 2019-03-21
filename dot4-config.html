@@ -31,23 +31,9 @@
         exportable: false,
         oneditsave: function() {
 			$.each( $("input[id^='node-config-input-']"), function () {
-			  //alert( $(this).hide() );
 			  let v=$(this).val().trim();
 			  $(this).val(v)
 			});
-			
-            /*var trimFields = [
-                "url",
-                "tenant",
-                "username",
-                "password"
-            ];
-            // Just in case any whitespace has crept in with the copy-paste of the fields
-            trimFields.forEach(function(field) {
-                var v = $("#node-config-input-"+field).val();
-                v = v.trim();
-                $("#node-config-input-"+field).val(v);
-            });*/
         }
     });
 </script>

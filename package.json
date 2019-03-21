@@ -4,7 +4,7 @@
   "description": "provide functionality of the dot4-api-client in node-red",
   "main": "index.js",
   "dependencies": {
-    "dot4-api-client": "^1.1.3"
+    "dot4-api-client": "^1.1.8"
   },
   "devDependencies": {
     "husky": "^1.2.0"
