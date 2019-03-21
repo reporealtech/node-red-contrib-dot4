@@ -185,7 +185,7 @@ module.exports = function(RED) {
 						if(supervisor){
 							uploaded.uploadResult.supervisor_PERS = supervisor.id
 						} else {
-							node.log("cannot find supervisor object")
+							node.log(`cannot set supervisor [${uploaded.userParams[supervisorAttrName]}] for [${_.get(uploaded,"uploadResult.lastName_PERS")}]`)
 							continue
 						}
 
