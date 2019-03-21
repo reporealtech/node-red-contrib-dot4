@@ -3,6 +3,7 @@
 const _=require("lodash")
 
 , createDot4Client = require('dot4-api-client')
+, Person = require('dot4-api-client/src/models/person')
 ;
 
 let dot4Client;
@@ -35,14 +36,28 @@ module.exports = function(RED) {
 				await dot4Client.connect();
 				node.log("connected to dot4")
 
+				node.status({fill:"green",shape:"ring",text:"loading metadata"});
 				const userManagementApi=await dot4Client.createUserManagementApi()
 				, successfullyImportedUsers=[]
 				, preScriptUsers=await userManagementApi.loadAllUsers()
 				, existingDepartments=await userManagementApi.loadAllDepartments()
 				, existingCompanies=await userManagementApi.loadAllCompanies()
+				, ciTypeList=await userManagementApi.getCiTypeList()
+				, ciType_PERS_id=_.get(_.find(ciTypeList, {"alias": Person.getCiTypeAlias()}),'id')
+				, existingCiAttributeTypesForPersons=await userManagementApi.getCiAttributeTypes(ciType_PERS_id)
 				;
-				// node.log(JSON.stringify(existingCompanies))
-
+				let ciType_distinguishedName=_.find(existingCiAttributeTypesForPersons, {"name": "distinguishedName"})
+				;
+				
+				if(!ciType_distinguishedName) {
+					node.log("creating ciType_distinguishedName")
+					ciType_distinguishedName=await userManagementApi.createCiAttributeType({ciTypeId: ciType_PERS_id, name: 'distinguishedName', isUnique: true})
+				} else if(!ciType_distinguishedName.isActive) {
+					node.log("updating ciType_distinguishedName")
+					ciType_distinguishedName.isActive=true
+					ciType_distinguishedName=await userManagementApi.updateCiAttributeType(ciType_distinguishedName)
+				}
+				
 				let uploadArray=msg.payload
 				, uploadError
 				;
@@ -61,6 +76,11 @@ module.exports = function(RED) {
 					node.log(JSON.stringify(userParams))
 					
 					let dot4user;
+					
+					_.forEach(userParams, (v,k)=>{
+						if(_.isString(v))
+							userParams[k]=v.trim()
+					})
 					
 					if(_.get(config,"format")=="activeDirectory") {
 						dot4user={
@@ -115,7 +135,7 @@ module.exports = function(RED) {
 							if(userParams.department){
 								let department=_.find(existingDepartments, {name: userParams.department, company_DEPA: company.id})
 								
-								if(!department && !dot4user.isDeactivated && !dot4user.isDeactivated_PERS ){
+								if(!department && !dot4user.isDeactivated ){
 									department=await userManagementApi.createDepartment({name: userParams.department, company_DEPA: company.id});
 									existingDepartments.push(department);
 								}
@@ -155,6 +175,8 @@ module.exports = function(RED) {
 				
 				//filter for users who have a supervisor
 				for(const uploaded of _.filter(successfullyImportedUsers, s=>_.get(s,"userParams."+supervisorAttrName) )){
+					node.status({fill:"blue",shape:"ring",text:`supervisor ${_.get(uploaded,"uploadResult.lastName_PERS")}`});
+					
 					let supervisor=_.get(_.find(successfullyImportedUsers, o=>o.userParams[supervisorAttrRef]==uploaded.userParams[supervisorAttrName]), 'uploadResult')
 						|| _.find(preScriptUsers, o=>o[supervisorAttrRef]==uploaded.userParams[supervisorAttrName] || o[supervisorAttrRef+'_PERS']==uploaded.userParams[supervisorAttrName])
 					;
