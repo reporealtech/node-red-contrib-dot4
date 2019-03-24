@@ -23,9 +23,11 @@
 		},
         label: function() {
 			let hub=this.url
-			if(hub.match(/.*?\/\/(.*?)\./))
+			if(hub.match(/.*?\/\/(.*?)\./)){
 				hub=RegExp.$1;
-				
+				if(hub.match(/(.*?)-/))
+					hub=RegExp.$1;
+			}
             return `${hub}: ${this.tenant}, ${this.username}` //
         },
         exportable: false,
