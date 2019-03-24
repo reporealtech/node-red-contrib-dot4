@@ -33,7 +33,7 @@ module.exports = function(RED) {
 					node.status({fill:"blue",shape:"ring",text:"loading ticket data"});
 					const incidentManagementApi=await dot4Client.createIncidentManagementApi();
 					msg.payload = await incidentManagementApi.getIncidents();	
-					node.log(`loaded ${msg.payload.length} tickets in dot4`)
+					node.log(`found ${msg.payload.length} tickets in dot4`)
 					
 					node.send(msg);
 					node.log(msg.payload)
