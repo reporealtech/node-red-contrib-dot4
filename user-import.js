@@ -9,6 +9,11 @@ const _=require("lodash")
 
 let dot4Client;
 
+//http://www.selfadsi.de/ads-attributes/user-userAccountControl.htm in binaer umwandeln und vorletzte Ziffer holen
+const adUserDeactivated=(userAccountControl)=>{
+	return parseInt(userAccountControl,10).toString(2).substr(-2).substr(0,1) == '1' 
+}
+
 module.exports = function(RED) {
     function userImport(config) {
 
@@ -53,21 +58,8 @@ module.exports = function(RED) {
 						, preScriptUsers=await userManagementApi.loadAllUsers()
 						, existingDepartments=await userManagementApi.loadAllDepartments()
 						, existingCompanies=await userManagementApi.loadAllCompanies()
-						, ciTypeList=await userManagementApi.getCiTypeList()
-						, ciType_PERS_id=_.get(_.find(ciTypeList, {"alias": Person.getCiTypeAlias()}),'id')
-						, existingCiAttributeTypesForPersons=await userManagementApi.getCiAttributeTypes(ciType_PERS_id)
 						;
-						let ciType_externalUserID=_.find(existingCiAttributeTypesForPersons, {"name": CI_TYPE_EXT_ID })
-						;
-						
-						if(!ciType_externalUserID) {
-							node.log("creating ciType_externalUserID")
-							ciType_externalUserID=await userManagementApi.createCiAttributeType({ciTypeId: ciType_PERS_id, name: CI_TYPE_EXT_ID, isUnique: true})
-						} else if(!ciType_externalUserID.isActive) {
-							node.log("updating ciType_externalUserID")
-							ciType_externalUserID.isActive=true
-							ciType_externalUserID=await userManagementApi.updateCiAttributeType(ciType_externalUserID)
-						}
+						await userManagementApi.createOrActivateCiAttributeTypeIfNeeded(Person.getCiTypeAlias(), CI_TYPE_EXT_ID)
 						
 						let uploadArray=msg.payload
 						, uploadError
@@ -91,7 +83,13 @@ module.exports = function(RED) {
 						
 						//create needed departments and companies, cannot be done during parallel user upload
 						for(const userParams of uploadArray){
-							if(userParams.company && !dot4user.isDeactivated){
+							let isDeactivated=false;
+							if(_.has(userParams,"isDeactivated"))
+								isDeactivated=userParams.isDeactivated
+							if(_.get(config,"format")=="activeDirectory") {
+								isDeactivated=adUserDeactivated(userParams.userAccountControl)
+							}
+							if(userParams.company && !isDeactivated){
 								let company=_.find(existingCompanies, {name: userParams.company})
 								
 								if(!company  ){
@@ -133,7 +131,7 @@ module.exports = function(RED) {
 										, firstName: userParams.givenName
 										, lastName: userParams.sn
 										, personnelNumber: userParams.employeeID
-										, isDeactivated: parseInt(userParams.userAccountControl,10).toString(2).substr(-2).substr(0,1) == '1' //http://www.selfadsi.de/ads-attributes/user-userAccountControl.htm in binaer umwandeln und vorletzte Ziffer holen
+										, isDeactivated: adUserDeactivated(userParams.userAccountControl)
 										, faxBusiness: userParams.facsimileTelephoneNumber
 										, description: userParams.displayName
 										, name: userParams.displayName

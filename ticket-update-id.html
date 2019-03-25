@@ -1,0 +1,36 @@
+<script type="text/javascript">
+    RED.nodes.registerType('ticket-update-id',{
+        category: 'REALTECH Dot4',
+        color: '#949890',
+        defaults: {
+             dot4config: {value:"", type:"dot4-config"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "dot4.png",
+        label: function() {
+            return this.name||"ticket-update-id";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="ticket-update-id">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+	
+	<hr>
+  <h4>REALTECH .4</h4>
+  <hr>
+  <div class="form-row">
+    <label for="node-input-dot4config"><i class="icon-bookmark"></i> Access Data</label>
+    <input type="text" id="node-input-dot4config" >
+  </div>
+  
+
+</script>
+
+<script type="text/x-red" data-help-name="ticket-update-id">
+    <p>Update external IDs of tickets in REALTECH .4</p>
+</script>
