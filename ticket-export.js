@@ -31,12 +31,23 @@ module.exports = function(RED) {
 					node.log("connected to dot4")
 
 					node.status({fill:"blue",shape:"ring",text:"loading ticket data"});
-					const incidentManagementApi=await dot4Client.createIncidentManagementApi();
-					msg.payload = await incidentManagementApi.getIncidents();	
-					node.log(`found ${msg.payload.length} tickets in dot4`)
+					const incidentManagementApi=await dot4Client.createIncidentManagementApi()
+					, tickets= await incidentManagementApi.getIncidents();	
+					_.forEach(tickets, t=>{
+						_.forEach(t, (v,k)=>{
+							if(k.endsWith("_id_INC")){
+								t[k.slice(0,-4)]=v
+								delete t[k]
+							}
+						})
+						t.dot4_id=t.id
+					})
+					// node.log('-------------------- '+_.first(tickets))
+					msg.payload = tickets
+					node.log(`found ${_.get(msg,"payload.length")||0} tickets in dot4`)
 					
 					node.send(msg);
-					node.log(msg.payload)
+					// node.log(msg.payload)
 					node.status({fill:"green",shape:"dot",text:"finished"});
 				} catch(e) {
 					node.log("ERROR: "+e)

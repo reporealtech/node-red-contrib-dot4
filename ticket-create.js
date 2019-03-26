@@ -38,9 +38,9 @@ module.exports = function(RED) {
 						  description: msg.payload.description
 						});	
 
-					msg.payload=`created ticket "${msg.payload.name}" in dot4`
+					msg.payload=createdIncident
 					node.send(msg);
-					node.log(msg.payload)
+					node.log(`created ticket "${msg.payload.name}" in dot4`)
 					node.status({fill:"green",shape:"dot",text:"finished"});
 				} catch(e) {
 					node.log("ERROR: "+e)

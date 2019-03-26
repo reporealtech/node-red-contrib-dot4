@@ -8,7 +8,7 @@ const _=require("lodash")
 let dot4Client;
 
 module.exports = function(RED) {
-    function ticketUpdateID(config) {
+    function ticketUpsert(config) {
 
         RED.nodes.createNode(this,config)
         const node = this
@@ -33,32 +33,60 @@ module.exports = function(RED) {
 					node.status({fill:"blue",shape:"ring",text:"loading ticket data"});
 					const incidentManagementApi=await dot4Client.createIncidentManagementApi()
 					;
+
+					let ticketsParam=msg.payload
+					if(!_.isArray(ticketsParam)){
+						ticketsParam=[msg.payload]
+					}
 					
 					//find new _id, e.g. tfs_id or sd_id
 					// node.log(JSON.stringify(existingCiAttributeTypesForTickets))
-					let externalId
-					, externalId_INC
+					let externalIdMapper={}
+					// , externalId_INC
 					;
-					for(const k of _.keys(_.first(msg.payload))) {
-						if(k.endsWith('_id')){
-							node.log("#found candidate for external ID: "+k)
-							externalId=k
+					for(const k of _.keys(_.first(ticketsParam))) {
+						if(k!="dot4_id" && k.endsWith('_id')){
+							node.log("#found external ID: "+k)
+							// externalId=k
 							
-							let attrType=await incidentManagementApi.createOrActivateCiAttributeTypeIfNeeded('INC', externalId)
-							externalId_INC=attrType.propertyName
+							let attrType=await incidentManagementApi.createOrActivateCiAttributeTypeIfNeeded('INC', k)
+							// externalId_INC=attrType.propertyName
+							externalIdMapper[k]=attrType.propertyName
 						}
 					}
 					
-					if(externalId){
-						for(const incident of msg.payload){
+					for(const incident of ticketsParam){
+						
+						//fuer Ticket Upload werden INC Endungen benoetigt
+						_.forEach(externalIdMapper, (externalId_INC,externalId)=>{
+							// node.log('######################## '+externalId_INC+', '+externalId)
 							incident[externalId_INC]=incident[externalId]+''
 							delete incident[externalId]
-							// node.log('### '+JSON.stringify(incident))
+						})
+
+						if(incident.dot4_id){
+							incident.id=incident.dot4_id;
+						
+							node.log('###update '+incident.name)
 							await incidentManagementApi.updateCi(incident)
+						} else {
+							node.log('###create '+incident.name)
+							delete incident.id
+							const createdIncident = await incidentManagementApi.createIncident(incident);	
+							incident.dot4_id=createdIncident.id
 						}
+						
+						//bei msg.payload werden keine INC Endungen erwartet
+						_.forEach(externalIdMapper, (externalId_INC,externalId)=>{
+							incident[externalId]=incident[externalId_INC]
+							delete incident[externalId_INC]
+						})
+
 					}
+					
+					msg.payload=ticketsParam;
 					node.send(msg);
-					// node.log(msg.payload)
+					node.log(JSON.stringify(msg.payload))
 					node.status({fill:"green",shape:"dot",text:"finished"});
 				} catch(e) {
 					node.log("ERROR: "+e)
@@ -67,5 +95,5 @@ module.exports = function(RED) {
 			});
 		}
 	}
-    RED.nodes.registerType("ticket-update-id",ticketUpdateID);
+    RED.nodes.registerType("ticket-upsert",ticketUpsert);
 }

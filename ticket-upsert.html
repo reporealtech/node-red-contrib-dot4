@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('ticket-update-id',{
+    RED.nodes.registerType('ticket-upsert',{
         category: 'REALTECH Dot4',
         color: '#949890',
         defaults: {
@@ -9,12 +9,12 @@
         outputs:1,
         icon: "dot4.png",
         label: function() {
-            return this.name||"ticket-update-id";
+            return this.name||"ticket-upsert";
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="ticket-update-id">
+<script type="text/x-red" data-template-name="ticket-upsert">
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -31,6 +31,8 @@
 
 </script>
 
-<script type="text/x-red" data-help-name="ticket-update-id">
-    <p>Update external IDs of tickets in REALTECH .4</p>
+<script type="text/x-red" data-help-name="ticket-upsert">
+    <p>Insert or update tickets in REALTECH .4
+	Update if items have an attribute dot4_id which will be mapped to the CI ID.
+	</p>
 </script>
