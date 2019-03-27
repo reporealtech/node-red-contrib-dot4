@@ -24,12 +24,13 @@ module.exports = function(RED) {
 
 			node.on('input', async function(msg) {
 				try{
+
 					node.log(`createDot4Client. baseUrl: ${dot4config.baseUrl}, user: ${dot4config.user}, tenant: ${dot4config.tenant}`)
 					node.status({fill:"green",shape:"ring",text:"connecting"});
 					dot4Client = createDot4Client(dot4config);
 					await dot4Client.connect();
 					node.log("connected to dot4")
-
+			
 					node.status({fill:"blue",shape:"ring",text:"loading ticket data"});
 					const incidentManagementApi=await dot4Client.createIncidentManagementApi()
 					;
