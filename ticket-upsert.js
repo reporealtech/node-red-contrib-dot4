@@ -31,9 +31,13 @@ module.exports = function(RED) {
 					await dot4Client.connect();
 					node.log("connected to dot4")
 			
-					node.status({fill:"blue",shape:"ring",text:"loading ticket data"});
+					node.status({fill:"blue",shape:"ring",text:"uploading ticket"});
 					const incidentManagementApi=await dot4Client.createIncidentManagementApi()
+					// , existingDot4Incidents=await incidentManagementApi.getIncidents() //TODO: Eigentlich muessen nciht alle geladen werden, sondern nur die mit bestimmten externalId (sd_id, tfs_id, ..)
 					;
+					
+					// node.log(`loaded ${existingDot4Incidents.length} cis in existingDot4Incidents`)
+					// node.log(JSON.stringify(_.find(existingDot4Incidents, {id: "3944"})))
 
 					let ticketsParam=msg.payload
 					if(!_.isArray(ticketsParam)){
@@ -44,19 +48,29 @@ module.exports = function(RED) {
 					// node.log(JSON.stringify(existingCiAttributeTypesForTickets))
 					let externalIdMapper={}
 					// , externalId_INC
+					// , externalId_attrTypeNamesToUpdate=[]
+					, checkedExternalIds=[]
 					;
-					for(const k of _.keys(_.first(ticketsParam))) {
-						if(k!="dot4_id" && k.endsWith('_id')){
-							node.log("#found external ID: "+k)
-							// externalId=k
-							
-							let attrType=await incidentManagementApi.createOrActivateCiAttributeTypeIfNeeded('INC', k)
-							// externalId_INC=attrType.propertyName
-							externalIdMapper[k]=attrType.propertyName
+					for(const t of ticketsParam){
+						for(const k of _.keys(t)) {
+							if(k!="dot4_id" && k.endsWith('_id') && checkedExternalIds.indexOf(k)==-1){
+								node.log("#found external ID: "+k)
+								// externalId=k
+								
+								let attrType=await incidentManagementApi.createOrActivateCiAttributeTypeIfNeeded('INC', k)
+								// externalId_INC=attrType.propertyName
+								externalIdMapper[k]=attrType.propertyName
+								checkedExternalIds.push(k)
+								// if(!attrType.justCreated){ // nur solche, die nicht frisch angelegt wurden?
+									// externalId_attrTypeNamesToUpdate.push(attrType.propertyName)
+								// }
+							}
 						}
 					}
 					
+					let feedbackCnt=0
 					for(const incident of ticketsParam){
+						node.status({fill:"blue",shape:"ring",text:`uploading ticket (${++feedbackCnt}/${ticketsParam.length})`});
 						
 						//fuer Ticket Upload werden INC Endungen benoetigt
 						_.forEach(externalIdMapper, (externalId_INC,externalId)=>{
@@ -65,10 +79,46 @@ module.exports = function(RED) {
 							delete incident[externalId]
 						})
 
-						if(incident.dot4_id){
+						if(!incident.dot4_id ){
+							//suche, ob eindeutige fremd-IDs gesetzt sind und es ein CI dazu gibt 
+							// const used_externalId_names = _.filter(externalId_attrTypeNamesToUpdate, (externalId_attrTypeName)=>{
+							const used_externalId_names = _.filter(externalIdMapper, (externalId_INC,externalId)=>{
+								if(_.get( incident, externalId_INC+".length")){
+									node.log(`#found external ID in object [${incident.name}]: ${externalId_INC}=${incident[externalId_INC]}. LENGTH: ${_.get( incident, externalId_INC+".length")}`)
+									return true;
+								}
+							})
+							
+							if(used_externalId_names.length){
+								// node.log(`!!!!LENGTH. used_externalId_names: ${used_externalId_names.length}, existingDot4Incidents: ${existingDot4Incidents.length}`)
+								// node.log(`suche nach ${used_externalId_names[0]}.length} in ${JSON.stringify(o)}`)
+								let keyToCheck=used_externalId_names[0]
+								node.log(`-----------keyToCheck: incident["${keyToCheck}"]=${incident[keyToCheck]}`)
+									
+							/*	const existingDot4Elem = _.find(existingDot4Incidents, o=>{
+									node.log(`check ${o[keyToCheck]}==${incident[keyToCheck]}`)
+									if(_.get(o,keyToCheck+".length") && o[keyToCheck]==incident[keyToCheck]){
+										node.log(`#found CI for [${incident.name}]`)
+										return true;
+									}
+								})*/
+								// ciQuery = `(ciTypeId eq ${ciTypeId} and (${query}))`;
+								const existingDot4Elem = _.get(await incidentManagementApi.getCis(
+									`ciTypeId eq ${_.get(incidentManagementApi.getCiType(incidentManagementApi.getUuidCiTypeIncident()),'id')} and ${keyToCheck} eq ${incident[keyToCheck]}`
+									// "ciTypeId": incidentManagementApi.getCiType(incidentManagementApi.getUuidCiTypeIncident())
+									// keyToCheck: incident[keyToCheck]
+								), 'items[0]')
+								node.log(`existingDot4Elem: ${JSON.stringify(existingDot4Elem)}`)
+								if(existingDot4Elem){
+									incident.dot4_id = existingDot4Elem.id
+								}
+							}
+						}
+													
+						if(incident.dot4_id ){
 							incident.id=incident.dot4_id;
 						
-							node.log('###update '+incident.name)
+							node.log(`###update CI  with id [${incident.id}], named [${incident.name}]`)
 							await incidentManagementApi.updateCi(incident)
 						} else {
 							node.log('###create '+incident.name)

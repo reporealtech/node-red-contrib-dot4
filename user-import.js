@@ -21,11 +21,12 @@ module.exports = function(RED) {
         const node = this
 		, dot4ConfigNode = RED.nodes.getNode(config.dot4config)
 		, CI_TYPE_EXT_ID = "externalUserIdForImport"
-		, CI_TYPE_EXT_ID_PERS = CI_TYPE_EXT_ID+'_PERS'
 		, promiseLimitCollect = promiseLimit(4);
 		;
 		
-		let alreadyRunning=false;
+		let alreadyRunning=false
+		, CI_TYPE_EXT_ID_PERS
+		;
 
 		if(dot4ConfigNode && dot4ConfigNode.username && _.get(dot4ConfigNode,"credentials.password") && dot4ConfigNode.tenant && dot4ConfigNode.url){
 
@@ -59,7 +60,8 @@ module.exports = function(RED) {
 						, existingDepartments=await userManagementApi.loadAllDepartments()
 						, existingCompanies=await userManagementApi.loadAllCompanies()
 						;
-						await userManagementApi.createOrActivateCiAttributeTypeIfNeeded(Person.getCiTypeAlias(), CI_TYPE_EXT_ID)
+						let attrType=await userManagementApi.createOrActivateCiAttributeTypeIfNeeded(Person.getCiTypeAlias(), CI_TYPE_EXT_ID)
+						CI_TYPE_EXT_ID_PERS=attrType.propertyName
 						
 						let uploadArray=msg.payload
 						, uploadError
