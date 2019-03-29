@@ -1,11 +1,11 @@
 {
   "name": "node-red-contrib-dot4",
-  "version": "0.7.16",
+  "version": "0.7.17",
   "description": "provide functionality of the dot4-api-client in node-red",
   "main": "index.js",
   "dependencies": {
     "p-limit": "^2.2.0",
-    "dot4-api-client": "^1.1.8"
+    "dot4-api-client": "^1.1.12"
   },
   "devDependencies": {
     "husky": "^1.2.0"
@@ -25,6 +25,6 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Tobias Ceska",
+  "author": "tobias.ceska@realtech.com",
   "license": "ISC"
 }
