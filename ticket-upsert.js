@@ -34,6 +34,7 @@ module.exports = function(RED) {
 					node.status({fill:"blue",shape:"ring",text:"uploading ticket"});
 					const incidentManagementApi=await dot4Client.createIncidentManagementApi()
 					// , existingDot4Incidents=await incidentManagementApi.getIncidents() //TODO: Eigentlich muessen nciht alle geladen werden, sondern nur die mit bestimmten externalId (sd_id, tfs_id, ..)
+					, ticketCiTypeId=_.get(incidentManagementApi.getCiType(incidentManagementApi.getUuidCiTypeIncident()),'id')
 					;
 					
 					// node.log(`loaded ${existingDot4Incidents.length} cis in existingDot4Incidents`)
@@ -69,6 +70,7 @@ module.exports = function(RED) {
 					}
 					
 					let feedbackCnt=0
+					, resultArray=[]
 					for(const incident of ticketsParam){
 						node.status({fill:"blue",shape:"ring",text:`uploading ticket (${++feedbackCnt}/${ticketsParam.length})`});
 						
@@ -104,7 +106,7 @@ module.exports = function(RED) {
 								})*/
 								// ciQuery = `(ciTypeId eq ${ciTypeId} and (${query}))`;
 								const existingDot4Elem = _.get(await incidentManagementApi.getCis(
-									`ciTypeId eq ${_.get(incidentManagementApi.getCiType(incidentManagementApi.getUuidCiTypeIncident()),'id')} and ${keyToCheck} eq ${incident[keyToCheck]}`
+									`ciTypeId eq ${ticketCiTypeId} and ${keyToCheck} eq ${incident[keyToCheck]}`
 									// "ciTypeId": incidentManagementApi.getCiType(incidentManagementApi.getUuidCiTypeIncident())
 									// keyToCheck: incident[keyToCheck]
 								), 'items[0]')
@@ -114,17 +116,23 @@ module.exports = function(RED) {
 								}
 							}
 						}
-													
+						
+						let uploadRes;
 						if(incident.dot4_id ){
-							incident.id=incident.dot4_id;
+							incident.id=incident.dot4_id
+							// incident.ciTypeId=ticketCiTypeId
 						
 							node.log(`###update CI  with id [${incident.id}], named [${incident.name}]`)
-							await incidentManagementApi.updateCi(incident)
+							if(incident.ciTypeId)
+								uploadRes=await incidentManagementApi.updateCi(incident)
+							else
+								uploadRes=await incidentManagementApi.updateIncident(incident)
+							// node.log(JSON.stringify(uploadRes))
 						} else {
 							node.log('###create '+incident.name)
 							delete incident.id
-							const createdIncident = await incidentManagementApi.createIncident(incident);	
-							incident.dot4_id=createdIncident.id
+							uploadRes = await incidentManagementApi.createIncident(incident);	
+							incident.dot4_id=uploadRes.id
 						}
 						
 						//bei msg.payload werden keine INC Endungen erwartet
@@ -132,10 +140,15 @@ module.exports = function(RED) {
 							incident[externalId]=incident[externalId_INC]
 							delete incident[externalId_INC]
 						})
-
+						resultArray.push(uploadRes)
 					}
 					
-					msg.payload=ticketsParam;
+					if(_.isArray(msg.payload)){
+						msg.payload=resultArray
+					} else {
+						msg.payload=_.first(resultArray)
+					}
+					// msg.payload=ticketsParam;
 					node.send(msg);
 					node.log(JSON.stringify(msg.payload))
 					node.status({fill:"green",shape:"dot",text:"finished"});
