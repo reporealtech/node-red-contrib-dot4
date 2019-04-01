@@ -1,6 +1,6 @@
 {
   "name": "node-red-contrib-dot4",
-  "version": "0.7.19",
+  "version": "0.7.20",
   "description": "provide functionality of the dot4-api-client in node-red",
   "main": "index.js",
   "dependencies": {
@@ -17,7 +17,7 @@
   },
   "node-red": {
     "nodes": {
-	  "dot4-config": "dot4-config.js",
+      "dot4-config": "dot4-config.js",
       "ticket-create": "ticket-create.js",
       "ticket-export": "ticket-export.js",
       "ticket-upsert": "ticket-upsert.js",
