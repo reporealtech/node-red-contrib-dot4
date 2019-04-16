@@ -42,5 +42,5 @@ module.exports = function(RED) {
 			});
 		}
     }
-    RED.nodes.registerType("ticket-create",saKpiRepositoryImport);
+    RED.nodes.registerType("saKpiRepository-import",saKpiRepositoryImport);
 }
