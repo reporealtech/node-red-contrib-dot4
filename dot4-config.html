@@ -32,6 +32,7 @@
         },
         exportable: false,
         oneditsave: function() {
+			console.log(this)
 			$.each( $("input[id^='node-config-input-']"), function () {
 			  let v=$(this).val().trim();
 			  $(this).val(v)

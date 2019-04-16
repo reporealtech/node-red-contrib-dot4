@@ -1,0 +1,46 @@
+<script type="text/javascript">
+    RED.nodes.registerType('saKpiRepository-import',{
+        category: 'REALTECH Dot4',
+        color: '#949890',
+        defaults: {
+             dot4config: {value:"", type:"dot4-config"}
+        },
+		credentials: {
+		  apiKey: {
+			type:"password",
+			required: true
+		  }
+		},
+        inputs:1,
+        outputs:1,
+        icon: "dot4.png",
+        label: function() {
+            return this.name||"saKpiRepository-import";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="saKpiRepository-import">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+	
+	<hr>
+  <h4>REALTECH .4</h4>
+  <hr>
+  <div class="form-row">
+    <label for="node-input-dot4config"><i class="icon-bookmark"></i> Access Data</label>
+    <input type="text" id="node-input-dot4config" >
+  </div>
+  
+  <div class="form-row">
+    <label for="node-input-apiKey"><i class="icon-tag"></i> API Key</label>
+    <input type="text" id="node-input-apiKey" placeholder="create an API key in .4 settings">
+  </div>
+
+</script>
+
+<script type="text/x-red" data-help-name="saKpiRepository-import">
+    <p>Import data in REALTECH .4 Service Assurance KPI Repository</p>
+</script>
