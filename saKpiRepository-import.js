@@ -33,7 +33,7 @@ module.exports = function(RED) {
 
 					await repoCli.login()
 					node.status({fill:"blue",shape:"ring",text:"uploading KPI data"});
-					await repoCli.getAllServices()
+					await repoCli.uploadKpis(msg.payload)
 
 					msg.payload="done"
 					node.send(msg);
