@@ -7,8 +7,6 @@ const _=require("lodash")
 , Person = require('dot4-api-client/src/models/person')
 ;
 
-let dot4Client;
-
 //http://www.selfadsi.de/ads-attributes/user-userAccountControl.htm in binaer umwandeln und vorletzte Ziffer holen
 const adUserDeactivated=(userAccountControl)=>{
 	return parseInt(userAccountControl,10).toString(2).substr(-2).substr(0,1) == '1' 
@@ -49,7 +47,7 @@ module.exports = function(RED) {
 						
 						node.log(`createDot4Client. baseUrl: ${dot4config.baseUrl}, user: ${dot4config.user}, tenant: ${dot4config.tenant}`)
 						node.status({fill:"green",shape:"ring",text:"connecting"});
-						dot4Client = createDot4Client(dot4config);
+						const dot4Client = createDot4Client(dot4config);
 						await dot4Client.connect();
 						node.log("connected to dot4")
 

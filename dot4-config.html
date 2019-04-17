@@ -1,19 +1,44 @@
 <script type="text/javascript">
+	const defaultUrl="https://api.dot4.de"
+	;
+	
+	function getHubPrefixes(urlP){
+		let label=urlP
+		, url=''
+		if(label.match(/.*?\/\/(.*?)\./)){
+			label=RegExp.$1;
+			if(label.match(/(.*)-/))
+				label=RegExp.$1;
+		}
+		if(urlP.indexOf(defaultUrl)===-1){
+			url=label
+		}
+	
+		return {
+			label //das "vnext" fuer settings dialog. bei Prod: "api"
+			, url //das "vnext" in https://aiq.dot4.de/vnext/KerstenHamburg/kpirepository/. bei Prod: ""
+		}
+	}
+	
     RED.nodes.registerType('dot4-config',{
         category: 'config',
         defaults: {
-		  username: {
-			value:"",
-			required: true
-		  },
-            url: {
-				value: "https://api.dot4.de",
+			username: {
+				value:"",
 				required: true
-			  }
-			,  tenant: {
+			}
+            , url: {
+				value: defaultUrl,
+				required: true
+			}  
+			, tenant: {
 				value: "",
 				required: true
-			  }
+			}
+			, sakpirepositoryurl: {
+				value: "",
+				required: false
+			}
         },
 		credentials: {
 		  password: {
@@ -22,13 +47,8 @@
 		  }
 		},
         label: function() {
-			let hub=this.url
-			if(hub.match(/.*?\/\/(.*?)\./)){
-				hub=RegExp.$1;
-				if(hub.match(/(.*?)-/))
-					hub=RegExp.$1;
-			}
-            return `${hub}: ${this.tenant}, ${this.username}` //
+			let prefixes=getHubPrefixes(this.url)
+            return `${prefixes.label}: ${this.tenant}, ${this.username}` //
         },
         exportable: false,
         oneditsave: function() {
@@ -36,6 +56,14 @@
 			  let v=$(this).val().trim();
 			  $(this).val(v)
 			});
+			
+			let hub=this.url
+			, saKpiRepositoryBase="https://ai.dot4.de"
+			, prefixes=getHubPrefixes($('#node-config-input-url').val())
+			;
+			if(hub.indexOf(defaultUrl)==-1)
+				saKpiRepositoryBase="https://aiq.dot4.de/"+prefixes.url;
+			$("#node-config-input-sakpirepositoryurl").val(saKpiRepositoryBase+'/'+$('#node-config-input-tenant').val()+'/kpirepository')
         }
     });
 </script>
@@ -52,6 +80,8 @@
     <label for="node-config-input-tenant"><i class="icon-tag"></i> tenant</label>
     <input type="text" id="node-config-input-tenant" placeholder="Musterfirma">
   </div>
+  
+   <input type="hidden" id="node-config-input-sakpirepositoryurl">
   
 	  <hr>
   <h5>Credentials</h5>

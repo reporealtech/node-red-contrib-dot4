@@ -6,13 +6,10 @@
              dot4config: {value:"", type:"dot4-config"}
         },
 		credentials: {
-		  apiKey: {
+		  apikey: {
 			type:"password",
 			required: true
 		  }
-		},
-		oneditsave: function() {
-			console.log(this.credentials.apiKey)
 		},
         inputs:1,
         outputs:1,
@@ -38,8 +35,8 @@
   </div>
   
   <div class="form-row">
-    <label for="node-input-apiKey"><i class="icon-tag"></i> API Key</label>
-    <input type="text" id="node-input-apiKey" placeholder="create an API key in .4 settings">
+    <label for="node-input-apikey"><i class="icon-tag"></i> API Key</label>
+    <input type="password" id="node-input-apikey" placeholder="create an API key in .4 settings">
   </div>
 
 </script>

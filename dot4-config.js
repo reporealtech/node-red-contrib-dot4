@@ -4,6 +4,7 @@ module.exports = function(RED) {
         this.url = n.url;
         this.tenant = n.tenant;
 		this.username = n.username
+		this.sakpirepositoryurl = n.sakpirepositoryurl
     }
     RED.nodes.registerType("dot4-config",Dot4Config,{
 		credentials: {
