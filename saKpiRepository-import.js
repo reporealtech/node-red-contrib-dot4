@@ -24,14 +24,18 @@ module.exports = function(RED) {
 				  , apiKey: _.get(node,"credentials.apikey")
 			  }
 			};
+			let repoCli;
 
 			node.on('input', async function(msg) {
 				try{
 					node.log(`createDot4Client. baseUrl: ${dot4config.baseUrl}, user: ${dot4config.user}, tenant: ${dot4config.tenant}`)
-					// node.status({fill:"green",shape:"ring",text:"connecting"});
-					let repoCli = createDot4Client(dot4config).createSaKpiRepositoryClient()
+					
+					if(!repoCli){
+						node.status({fill:"green",shape:"ring",text:"connecting"});
+						repoCli = createDot4Client(dot4config).createSaKpiRepositoryClient()
 
-					await repoCli.login()
+						await repoCli.login()
+					}
 					node.status({fill:"blue",shape:"ring",text:"uploading KPI data"});
 					await repoCli.uploadKpis(msg.payload)
 
