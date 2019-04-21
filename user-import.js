@@ -37,7 +37,10 @@ module.exports = function(RED) {
 			  , baseUrl: dot4ConfigNode.url
 			};
 			
-
+			let dot4Client
+			, userManagementApi
+			;
+			
 			node.on('input', async function(msg) {
 				if(alreadyRunning){
 					node.log("########### can't start multiple times #################")
@@ -45,15 +48,18 @@ module.exports = function(RED) {
 					try{
 						alreadyRunning=true;
 						
-						node.log(`createDot4Client. baseUrl: ${dot4config.baseUrl}, user: ${dot4config.user}, tenant: ${dot4config.tenant}`)
-						node.status({fill:"green",shape:"ring",text:"connecting"});
-						const dot4Client = createDot4Client(dot4config);
-						await dot4Client.connect();
-						node.log("connected to dot4")
+						if(!dot4Client || !userManagementApi) {
+							node.log(`createDot4Client. baseUrl: ${dot4config.baseUrl}, user: ${dot4config.user}, tenant: ${dot4config.tenant}`)
+							node.status({fill:"green",shape:"ring",text:"connecting"});
+							dot4Client = createDot4Client(dot4config);
+							await dot4Client.connect();
+							node.log("connected to dot4")
+
+							userManagementApi=await dot4Client.createUserManagementApi()
+						}
 
 						node.status({fill:"green",shape:"ring",text:"loading metadata"});
-						const userManagementApi=await dot4Client.createUserManagementApi()
-						, successfullyImportedUsers=[]
+						const successfullyImportedUsers=[]
 						, preScriptUsers=await userManagementApi.loadAllUsers()
 						, existingDepartments=await userManagementApi.loadAllDepartments()
 						, existingCompanies=await userManagementApi.loadAllCompanies()
