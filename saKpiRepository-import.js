@@ -39,7 +39,7 @@ module.exports = function(RED) {
 					node.status({fill:"blue",shape:"ring",text:"uploading KPI data"});
 					await repoCli.uploadKpis(msg.payload)
 
-					msg.payload="done"
+					msg.payload=await repoCli.uploadKpis(msg.payload)
 					node.send(msg);
 					// node.log(`created ticket "${msg.payload.name}" in dot4`)
 					node.status({fill:"green",shape:"dot",text:"finished"});
