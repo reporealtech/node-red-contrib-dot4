@@ -28,20 +28,18 @@ module.exports = function(RED) {
 
 			node.on('input', async function(msg) {
 				try{
-					node.log(`createDot4Client. baseUrl: ${dot4config.baseUrl}, user: ${dot4config.user}, tenant: ${dot4config.tenant}`)
-					
 					if(!repoCli){
+						node.log(`createDot4Client. baseUrl: ${dot4config.baseUrl}, user: ${dot4config.user}, tenant: ${dot4config.tenant}`)
+					
 						node.status({fill:"green",shape:"ring",text:"connecting"});
 						repoCli = createDot4Client(dot4config).createSaKpiRepositoryClient()
 
 						await repoCli.login()
 					}
 					node.status({fill:"blue",shape:"ring",text:"uploading KPI data"});
-					await repoCli.uploadKpis(msg.payload)
 
-					msg.payload=await repoCli.uploadKpis(msg.payload)
+					msg.payload=await repoCli.uploadKpis(msg.payload, _.get(config,"service"), _.get(config,"kpi"))
 					node.send(msg);
-					// node.log(`created ticket "${msg.payload.name}" in dot4`)
 					node.status({fill:"green",shape:"dot",text:"finished"});
 				} catch(e) {
 					node.log("ERROR: "+e)
