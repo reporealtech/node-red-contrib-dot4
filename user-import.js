@@ -61,9 +61,10 @@ module.exports = function(RED) {
 						node.status({fill:"green",shape:"ring",text:"loading metadata"});
 						const successfullyImportedUsers=[]
 						, preScriptUsers=await userManagementApi.loadAllUsers()
-						, existingDepartments=await userManagementApi.loadAllDepartments()
+						, existingDepartments=[]
 						, existingCompanies=await userManagementApi.loadAllCompanies()
 						;
+						
 						let attrType=await userManagementApi.createOrActivateCiAttributeTypeIfNeeded(Person.getCiTypeAlias(), CI_TYPE_EXT_ID)
 						CI_TYPE_EXT_ID_PERS=attrType.propertyName
 						
@@ -107,12 +108,18 @@ module.exports = function(RED) {
 									
 									if(userParams.department){
 										let department=_.find(existingDepartments, {name: userParams.department, company_DEPA: company.id})
+											|| await userManagementApi.loadDepartment(userParams.department, company.id)
+										;
 										
 										if(!department ){
+											node.log("----------- CREATING Department "+userParams.department)
 											department=await userManagementApi.createDepartment({name: userParams.department, company_DEPA: company.id});
+										}
+
+										if(department && existingDepartments.indexOf(department)==-1){
+											node.log("--------------- loaded Department: "+JSON.stringify(department))
 											existingDepartments.push(department);
 										}
-										
 									}
 								} 
 							}
@@ -165,9 +172,11 @@ module.exports = function(RED) {
 									throw new Error("missing user parameters/mapping")
 								}
 								
+								let existingUser=_.find(preScriptUsers, o=>o.email_PERS.toLowerCase()==dot4user.email.toLowerCase());
+								
 								if(_.get(config,"person_or_user")=="person") {
-									dot4user.userId_PERS = null
-									dot4user.userExisting_PERS = null
+									dot4user.userId_PERS = _.get(existingUser,"userId_PERS") //behalte bisherige Einstellung des CIs
+									dot4user.userExisting_PERS = _.get(existingUser, "userExisting_PERS")
 								}
 								
 								//set company and department
@@ -224,7 +233,7 @@ module.exports = function(RED) {
 									uploaded.uploadResult.supervisor_PERS = supervisor.id
 								} else {
 									node.log(`cannot set supervisor [${uploaded.userParams[supervisorAttrName]}] for [${_.get(uploaded,"uploadResult.lastName_PERS")}]`)
-									// node.log(JSON.stringify(_.last(preScriptUsers)))
+									node.log(JSON.stringify(_.get(uploaded,"uploadResult")))
 									// node.log(`${CI_TYPE_EXT_ID_PERS}==${uploaded.userParams[supervisorAttrName]}`)
 								// node.log(JSON.stringify(_.find(preScriptUsers, {"email_PERS":"Steven.Jatz@realtech.com"})))
 									return
