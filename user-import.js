@@ -112,12 +112,12 @@ module.exports = function(RED) {
 										;
 										
 										if(!department ){
-											node.log("----------- CREATING Department "+userParams.department)
+											node.log("creating department "+userParams.department)
 											department=await userManagementApi.createDepartment({name: userParams.department, company_DEPA: company.id});
 										}
 
 										if(department && existingDepartments.indexOf(department)==-1){
-											node.log("--------------- loaded Department: "+JSON.stringify(department))
+											node.log("loaded department: "+department.name)
 											existingDepartments.push(department);
 										}
 									}
@@ -127,9 +127,10 @@ module.exports = function(RED) {
 						
 						//upload users
 						let collectedPromises=[]
+						, userCnt=0
 						for(const userParams of uploadArray){
 							collectedPromises.push(promiseLimitCollect(async ()=>{
-								node.log(JSON.stringify(userParams))
+								// node.log(JSON.stringify(userParams))
 								
 								let dot4user;
 								
@@ -203,7 +204,7 @@ module.exports = function(RED) {
 								node.log(`uploading/updating in dot4: ${dot4user.firstName} ${dot4user.lastName}`);
 
 								// node.log("----------userImport: "+JSON.stringify(dot4user))
-								node.status({fill:"blue",shape:"ring",text:`processing ${dot4user.lastName}`});
+								node.status({fill:"blue",shape:"ring",text:`processing ${dot4user.lastName} (${Math.round(++userCnt/uploadArray.length*100)}%)`});
 								let uploadResult=await userManagementApi.upsertPerson(dot4user);
 								if(uploadResult instanceof Error) {
 									uploadError=uploadResult.message
@@ -232,10 +233,8 @@ module.exports = function(RED) {
 								if(supervisor){
 									uploaded.uploadResult.supervisor_PERS = supervisor.id
 								} else {
-									node.log(`cannot set supervisor [${uploaded.userParams[supervisorAttrName]}] for [${_.get(uploaded,"uploadResult.lastName_PERS")}]`)
-									node.log(JSON.stringify(_.get(uploaded,"uploadResult")))
-									// node.log(`${CI_TYPE_EXT_ID_PERS}==${uploaded.userParams[supervisorAttrName]}`)
-								// node.log(JSON.stringify(_.find(preScriptUsers, {"email_PERS":"Steven.Jatz@realtech.com"})))
+									node.log(`cannot set supervisor [${uploaded.userParams[supervisorAttrName]}] for [${_.get(uploaded,"uploadResult.firstName_PERS")} ${_.get(uploaded,"uploadResult.lastName_PERS")}]`)
+									// node.log(JSON.stringify(_.get(uploaded,"uploadResult")))
 									return
 								}
 
