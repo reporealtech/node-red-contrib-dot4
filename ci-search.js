@@ -36,17 +36,24 @@ module.exports = function(RED) {
 						configurationManagementApi=await dot4Client.createConfigurationManagementApi()
 					}
 					
-					node.status({fill:"blue",shape:"ring",text:"loading CI data"});
-					msg.payload = await configurationManagementApi.getCis(_.get(config,"query"));	
-					// node.log('-------------------- '+_.first(tickets))
-					node.log(`found ${_.get(msg,"payload.length")||0} cis in dot4`)
-					
-					node.send(msg);
+					if(_.get(msg,"payload.query")){
+						node.status({fill:"blue",shape:"ring",text:"loading CI data"});
+						msg.payload = await configurationManagementApi.getCis(msg.payload.query);	
+						// node.log('-------------------- '+_.first(tickets))
+						node.log(`found ${_.get(msg,"payload.items.length")||0} cis in dot4`)
+						node.status({fill:"green",shape:"dot",text:"finished"});
+					} else {
+						msg.payload="msg.payload.query must be set."
+						node.status({fill:"red",shape:"dot",text:"finished"});
+					}
+										
+					node.send(msg)
 					// node.log(msg.payload)
-					node.status({fill:"green",shape:"dot",text:"finished"});
 				} catch(e) {
 					node.log("ERROR: "+e)
 					node.status({fill:"red",shape:"dot",text:`${e}`});
+					msg.payload=`${e}`
+					node.send(msg)
 				}
 			});
 		}

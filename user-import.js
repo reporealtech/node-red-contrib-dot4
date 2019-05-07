@@ -258,6 +258,8 @@ module.exports = function(RED) {
 						node.log("ERROR: "+e)
 						node.status({fill:"red",shape:"dot",text: `${e}`});
 						alreadyRunning=false;
+						msg.payload=`${e}`
+						node.send(msg)
 					}
 				}
 			});

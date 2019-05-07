@@ -57,6 +57,8 @@ module.exports = function(RED) {
 				} catch(e) {
 					node.log("ERROR: "+e)
 					node.status({fill:"red",shape:"dot",text:`${e}`});
+					msg.payload=`${e}`
+					node.send(msg)
 				}
 			});
 		}

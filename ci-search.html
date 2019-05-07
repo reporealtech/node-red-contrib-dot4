@@ -4,10 +4,6 @@
         color: '#949890',
         defaults: {
              dot4config: {value:"", type:"dot4-config"}
-			 , query: {
-				value: "",
-				required: true
-			  }
         },
         inputs:1,
         outputs:1,
@@ -32,13 +28,9 @@
     <input type="text" id="node-input-dot4config" >
   </div>
   
-  <div class="form-row">
-    <label for="node-input-query"><i class="icon-book"></i> Search Query</label>
-    <input type="text" id="node-input-query" placeholder="id=1">
-  </div>
-
 </script>
 
 <script type="text/x-red" data-help-name="ci-search">
     <p>search a configuration item in REALTECH .4</p>
+	<p>Input: msg.payload.query="contains(name,'Bernd') and ciTypeId eq 137"
 </script>

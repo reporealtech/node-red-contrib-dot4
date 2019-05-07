@@ -6,11 +6,11 @@
              dot4config: {value:"", type:"dot4-config"}
 			 , service: {
 				value: "",
-				required: true
+				required: false
 			  }
 			  , kpi: {
 				value: "",
-				required: true
+				required: false
 			  }
         },
 		credentials: {
@@ -49,16 +49,17 @@
   
   <div class="form-row">
     <label for="node-input-service"><i class="icon-book"></i> Service</label>
-    <input type="text" id="node-input-service" placeholder="Unique Service Name or UID">
+    <input type="text" id="node-input-service" placeholder="Default Unique Service Name or UID">
   </div>
   
   <div class="form-row">
     <label for="node-input-kpi"><i class="fa fa-bar-chart"></i> KPI</label>
-    <input type="text" id="node-input-kpi" placeholder="Name of the KPI">
+    <input type="text" id="node-input-kpi" placeholder="Default Name of the KPI">
   </div>
 
 </script>
 
 <script type="text/x-red" data-help-name="saKpiRepository-import">
     <p>Import data in REALTECH .4 Service Assurance KPI Repository</p>
+	<p>The needed API Key can be generated in REALTECH .4</p>
 </script>
