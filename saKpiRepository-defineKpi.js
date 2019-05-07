@@ -37,7 +37,7 @@ module.exports = function(RED) {
 						await repoCli.login()
 					}
 
-					if(_.get(msg,"")){
+					if(_.get(msg,"payload.name")){
 						msg.payload=await repoCli.defineCustomKpi(msg.payload)
 						node.status({fill:"green",shape:"dot",text:"finished"});
 					} else {
