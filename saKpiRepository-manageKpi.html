@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('saKpiRepository-defineKpi',{
+    RED.nodes.registerType('saKpiRepository-manageKpi',{
         category: 'REALTECH Dot4',
         color: '#949890',
         defaults: {
@@ -9,12 +9,12 @@
         outputs:1,
         icon: "dot4.png",
         label: function() {
-            return this.name||"saKpiRepository-defineKpi";
+            return this.name||"saKpiRepository-manageKpi";
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="saKpiRepository-defineKpi">
+<script type="text/x-red" data-template-name="saKpiRepository-manageKpi">
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -30,10 +30,12 @@
   
 </script>
 
-<script type="text/x-red" data-help-name="saKpiRepository-defineKpi">
+<script type="text/x-red" data-help-name="saKpiRepository-manageKpi">
     <p>Define a new KPI in REALTECH .4 Service Assurance KPI Repository</p>
-	<p>Minimum Input: <code>msg.payload={"name":"myNewKpi"}</code></p>
+	<p>Minimum Input: <code>msg.payload.kpi={"name":"myNewKpi"}</code></p>
 	<p>Maximum Input: <code>msg.payload={
+	  action: "create|read|update|delete",
+	  kpi:{
 	  "name": "storage",
 	  "label": "Storage",
 	  "description": "This KPI saves the storage of my server.",
@@ -43,5 +45,6 @@
 		"color": "black",
 		"charttype": "line",
 		"aggregate": "sum"
+		}
 	}</code></p>
 </script>

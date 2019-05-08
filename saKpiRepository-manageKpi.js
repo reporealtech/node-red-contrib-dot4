@@ -6,7 +6,7 @@ const _=require("lodash")
 ;
 
 module.exports = function(RED) {
-    function saKpiRepositoryDefineKpi(config) {
+    function saKpiRepositoryManageKpi(config) {
 
         RED.nodes.createNode(this,config)
         const node = this
@@ -37,11 +37,22 @@ module.exports = function(RED) {
 						await repoCli.login()
 					}
 
-					if(_.get(msg,"payload.name")){
-						msg.payload=await repoCli.defineCustomKpi(msg.payload)
+					let action=_.get(msg,"payload.action") || "read"
+					, kpi=_.get(msg,"payload.kpi")
+					;
+					if(_.get(kpi,"name")){
+						if(action=="create"){
+							msg.payload=await repoCli.defineCustomKpi(kpi)
+						} else if(action=="update"){
+							
+						} else if(action=="delete"){
+							
+						} else { //read as default
+							
+						}
 						node.status({fill:"green",shape:"dot",text:"finished"});
 					} else {
-						msg.payload="missing parameter: name"
+						msg.payload="missing parameter: kpi.name"
 						node.status({fill:"red",shape:"dot",text:"finished"});
 					}
 					node.send(msg);
@@ -54,5 +65,5 @@ module.exports = function(RED) {
 			});
 		}
     }
-    RED.nodes.registerType("saKpiRepository-defineKpi",saKpiRepositoryDefineKpi);
+    RED.nodes.registerType("saKpiRepository-manageKpi",saKpiRepositoryManageKpi);
 }
