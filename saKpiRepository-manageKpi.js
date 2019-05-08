@@ -46,7 +46,8 @@ module.exports = function(RED) {
 						} else if(action=="update"){
 							
 						} else if(action=="delete"){
-							
+							const kpis=await repoCli.getAllKpis()
+							msg.payload=await repoCli.defineCustomKpi(kpi)
 						} else { //read as default
 							
 						}
