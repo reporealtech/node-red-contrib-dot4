@@ -36,9 +36,18 @@ module.exports = function(RED) {
 
 						await repoCli.login()
 					}
+
+					let dataArr=msg.payload
+					if(!_.isArray(dataArr))
+						dataArr=[msg.payload]
+					
+					/* consistence check */
+					if(!_.every(dataArr, d=>_.has(d,"value")))
+						throw new Error(`you must define at least a value for each data row!`);
+					
 					node.status({fill:"blue",shape:"ring",text:"uploading KPI data"});
 
-					msg.payload=await repoCli.uploadKpis(msg.payload, _.get(config,"service"), _.get(config,"kpi"))
+					msg.payload=await repoCli.uploadKpis(dataArr, _.get(config,"service"), _.get(config,"kpi"))
 					node.send(msg);
 					node.status({fill:"green",shape:"dot",text:"finished"});
 				} catch(e) {
