@@ -9,6 +9,7 @@ module.exports = function(RED) {
     RED.nodes.registerType("dot4-config",Dot4Config,{
 		credentials: {
 		  password: {type:"password"}
+		  , apikey: {type:"password"}
 		}
 	});
 }

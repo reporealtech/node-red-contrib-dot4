@@ -45,6 +45,10 @@
 			type:"password",
 			required: true
 		  }
+		  , apikey: {
+			type:"password",
+			required: false
+		  }
 		},
         label: function() {
 			let prefixes=getHubPrefixes(this.url)
@@ -96,8 +100,14 @@
     <input type="password" id="node-config-input-password">
   </div>
 
+    <div class="form-row">
+    <label for="node-config-input-apikey"><i class="fa fa-key"></i> API Key</label>
+    <input type="password" id="node-config-input-apikey" placeholder="create an API key in .4 settings">
+  </div>
+
 </script>
 
 <script type="text/x-red" data-help-name="dot4-config">
     <p>Configuration for REALTECH .4</p>
+	<p>The needed API Key can be generated in REALTECH .4</p>
 </script>

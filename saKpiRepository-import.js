@@ -21,7 +21,7 @@ module.exports = function(RED) {
 			  , baseUrl: dot4ConfigNode.url
 			  , saKpiRepository: {
 				  url: dot4ConfigNode.sakpirepositoryurl
-				  , apiKey: _.get(node,"credentials.apikey")
+				  , apiKey: _.get(dot4ConfigNode,"credentials.apikey")
 			  }
 			};
 			let repoCli;
@@ -50,9 +50,5 @@ module.exports = function(RED) {
 			});
 		}
     }
-    RED.nodes.registerType("saKpiRepository-import",saKpiRepositoryImport,{
-		credentials: {
-		  apikey: {type:"password"}
-		}
-	});
+    RED.nodes.registerType("saKpiRepository-import",saKpiRepositoryImport);
 }

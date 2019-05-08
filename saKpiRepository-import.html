@@ -13,12 +13,6 @@
 				required: false
 			  }
         },
-		credentials: {
-		  apikey: {
-			type:"password",
-			required: true
-		  }
-		},
         inputs:1,
         outputs:1,
         icon: "dot4.png",
@@ -41,12 +35,8 @@
     <label for="node-input-dot4config"><i class="icon-bookmark"></i> Access Data</label>
     <input type="text" id="node-input-dot4config" >
   </div>
-  
-  <div class="form-row">
-    <label for="node-input-apikey"><i class="fa fa-key"></i> API Key</label>
-    <input type="password" id="node-input-apikey" placeholder="create an API key in .4 settings">
-  </div>
-  
+
+
   <div class="form-row">
     <label for="node-input-service"><i class="icon-book"></i> Service</label>
     <input type="text" id="node-input-service" placeholder="Default Unique Service Name or UID">
@@ -61,5 +51,5 @@
 
 <script type="text/x-red" data-help-name="saKpiRepository-import">
     <p>Import data in REALTECH .4 Service Assurance KPI Repository</p>
-	<p>The needed API Key can be generated in REALTECH .4</p>
+	
 </script>

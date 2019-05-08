@@ -5,12 +5,6 @@
         defaults: {
              dot4config: {value:"", type:"dot4-config"}
         },
-		credentials: {
-		  apikey: {
-			type:"password",
-			required: true
-		  }
-		},
         inputs:1,
         outputs:1,
         icon: "dot4.png",
@@ -34,14 +28,20 @@
     <input type="text" id="node-input-dot4config" >
   </div>
   
-  <div class="form-row">
-    <label for="node-input-apikey"><i class="fa fa-key"></i> API Key</label>
-    <input type="password" id="node-input-apikey" placeholder="create an API key in .4 settings">
-  </div>
-
 </script>
 
 <script type="text/x-red" data-help-name="saKpiRepository-defineKpi">
     <p>Define a new KPI in REALTECH .4 Service Assurance KPI Repository</p>
-	<p>The needed API Key can be generated in REALTECH .4</p>
+	<p>Minimum Input: <code>msg.payload={"name":"myNewKpi"}</code></p>
+	<p>Maximum Input: <code>msg.payload={
+	  "name": "storage",
+	  "label": "Storage",
+	  "description": "This KPI saves the storage of my server.",
+		"datatype": "number",
+		"storagetype": "hour",
+		"isSelected": true,
+		"color": "black",
+		"charttype": "line",
+		"aggregate": "sum"
+	}</code></p>
 </script>

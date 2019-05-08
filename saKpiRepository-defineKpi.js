@@ -21,7 +21,7 @@ module.exports = function(RED) {
 			  , baseUrl: dot4ConfigNode.url
 			  , saKpiRepository: {
 				  url: dot4ConfigNode.sakpirepositoryurl
-				  , apiKey: _.get(node,"credentials.apikey")
+				  , apiKey: _.get(dot4ConfigNode,"credentials.apikey")
 			  }
 			};
 			let repoCli;
@@ -41,7 +41,7 @@ module.exports = function(RED) {
 						msg.payload=await repoCli.defineCustomKpi(msg.payload)
 						node.status({fill:"green",shape:"dot",text:"finished"});
 					} else {
-						msg.payload="missing parameters"
+						msg.payload="missing parameter: name"
 						node.status({fill:"red",shape:"dot",text:"finished"});
 					}
 					node.send(msg);
@@ -54,9 +54,5 @@ module.exports = function(RED) {
 			});
 		}
     }
-    RED.nodes.registerType("saKpiRepository-defineKpi",saKpiRepositoryDefineKpi,{
-		credentials: {
-		  apikey: {type:"password"}
-		}
-	});
+    RED.nodes.registerType("saKpiRepository-defineKpi",saKpiRepositoryDefineKpi);
 }

@@ -1,10 +1,10 @@
 {
   "name": "node-red-contrib-dot4",
-  "version": "0.7.42",
+  "version": "0.7.43",
   "description": "provide functionality of the dot4-api-client in node-red",
   "main": "index.js",
   "dependencies": {
-    "dot4-api-client": "^1.1.32",
+    "dot4-api-client": "^1.1.33",
     "p-limit": "^2.2.0"
   },
   "devDependencies": {
