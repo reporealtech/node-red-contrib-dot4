@@ -39,19 +39,38 @@ module.exports = function(RED) {
 
 					let action=_.get(msg,"payload.action") || "read"
 					, kpi=_.get(msg,"payload.kpi")
+					, result
+					, resultColor="green"
 					;
 					if(_.get(kpi,"name")){
+						const kpis=await repoCli.getAllKpis()
+						, kpiInDB=_.find(kpis,kdb=>kdb.name==kpi.name || kdb.uid==kpi.name)
+						;
+						// node.log(`kpiInDB: ${JSON.stringify(kpiInDB)}`)
+						
 						if(action=="create"){
-							msg.payload=await repoCli.defineCustomKpi(kpi)
+							result=await repoCli.defineCustomKpi(kpi)
 						} else if(action=="update"){
-							
+							if(kpiInDB){
+								await repoCli.deleteKpi(_.get(kpiInDB,"uid"))
+								result=await repoCli.defineCustomKpi(kpi)
+							} else {
+								result="no kpi found to update"
+								resultColor="red"
+							}
 						} else if(action=="delete"){
-							const kpis=await repoCli.getAllKpis()
-							msg.payload=await repoCli.defineCustomKpi(kpi)
+							if(kpiInDB){
+								result=await repoCli.deleteKpi(_.get(kpiInDB,"uid"))
+							} else {
+								result="no kpi found to delete"
+								resultColor="red"
+							}
 						} else { //read as default
-							
+							action="read"
+							result=kpiInDB || "no kpi found"
 						}
-						node.status({fill:"green",shape:"dot",text:"finished"});
+						msg.payload = { action, result }
+						node.status({fill:resultColor,shape:"dot",text:"finished"});
 					} else {
 						msg.payload="missing parameter: kpi.name"
 						node.status({fill:"red",shape:"dot",text:"finished"});
