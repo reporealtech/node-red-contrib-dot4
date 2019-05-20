@@ -1,0 +1,49 @@
+<script type="text/javascript">
+    RED.nodes.registerType('saKpiRepository-export',{
+        category: 'REALTECH Dot4',
+        color: '#949890',
+        defaults: {
+             dot4config: {value:"", type:"dot4-config"}
+			 , service: {
+				value: "",
+				required: false
+			  }
+        },
+        inputs:1,
+        outputs:1,
+        icon: "dot4.png",
+        label: function() {
+            return this.name||"saKpiRepository-export";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="saKpiRepository-export">
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+	
+	<hr>
+  <h4>REALTECH .4</h4>
+  <hr>
+  <div class="form-row">
+    <label for="node-input-dot4config"><i class="icon-bookmark"></i> Access Data</label>
+    <input type="text" id="node-input-dot4config" >
+  </div>
+
+
+  <div class="form-row">
+    <label for="node-input-service"><i class="icon-book"></i> Service</label>
+    <input type="text" id="node-input-service" placeholder="Default Unique Service Name or UID">
+  </div>
+  
+</script>
+
+<script type="text/x-red" data-help-name="saKpiRepository-export">
+    <p>Export data from REALTECH .4 Service Assurance KPI Repository.</p>
+	<p>If you set a service in the node configuration it is used as default. But you can also set in the msg.payload.service.
+	   But it must be defined either here or there.
+	   Other optional parameters in msg.payload are: msg.payload.starttime, msg.payload.endtime, msg.payload.interval
+	</p>
+</script>
