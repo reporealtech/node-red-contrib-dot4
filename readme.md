@@ -1,29 +1,38 @@
-# Node-RED DOT4 API JavaScript Client Library for Node.js
+![Platform Node-RED](http://b.repl.ca/v1/Platform-Node--RED-red.png)
+![Node-RED Dot4](http://b.repl.ca/v1/Node--RED-Dot4-orange.png)
+[![NPM version](https://badge.fury.io/js/node-red-contrib-dot4.png)](https://www.npmjs.com/package/node-red-contrib-dot4)
+![NodeJS_Version](http://b.repl.ca/v1/NodeJS-LTS-green.png)
 
-## Container 
+# node-red-contrib-dot4
 
-docker run --rm -it -p 1880:1880 -v /srv/node-red-data:/data --name mynodered nodered/node-red-docker
+## Connect your REALTECH Dot4 to a Node-RED server 
 
-Problem: sehr alte node-version. Nicht kompatibel mit dot4-api-client
+[Node-RED][1] contribution package for [REALTECH Dot4][2]
 
-/srv/node-red-data$ node-red --userDir /srv/node-red-data
-DEBUG=dot4-client nodemon --watch nodes node_modules/node-red/red.js --userDir /srv/node-red-data
-DEBUG=dot4-client forever --watch --watchDirectory ./nodes/ node_modules/node-red/red.js --userDir /srv/node-red-data
+## Install
 
-## Node Modules
+Run the following command in the root directory of your Node-RED install
 
-Einbindung
-* node-red-contrib-dot4-api-client
-* dot4-api-client
+    npm install node-red-contrib-dot4
 
-Registrierung des Moduls
-* in .config.json
+Run the following command for global install
 
-## LDAP Queries
+    npm install -g node-red-contrib-dot4
 
-https://ldapwiki.com/wiki/LDAP%20Query%20Basic%20Examples
-https://www.faq-o-matic.net/2002/09/21/active-directory-ldap-feldnamen/ welche felder koennen selektiert werden
-http://www.selfadsi.de/ads-attributes/user-userAccountControl.htm in binaer umwandeln und vorletzte Ziffer holen
+try these options on npm install to build, if you have problems to install
 
-mail=*@dot4.de
-(objectclass=person)
+    --unsafe-perm --build-from-source
+    
+## How to use
+
+![Flow Example](images/screenshot-ticket-export-1.png)
+
+## Debug
+
+Debug will be activated by starting Node-RED with debug mode:
+
+    DEBUG=dot4-client node-red -v
+
+
+[1]:https://nodered.org
+[2]:https://hub.dot4.de
