@@ -55,6 +55,7 @@
       <dd> A JSON object or array of JSON objects with the ticket data to be inserted or updated. 
 	  	In order to update items in .4 they must have the optional attribute <code>dot4_id</code> which will be mapped to the CI ID.
 		IDs of other external systems for which we provide node-red nodes are handled the same way: 
+		<code>sd_id</code>, <code>tfs_id</code>, ... are valid attributes.
 		<br />
 		<br />
 		Example: <code>msg.payload = { 
