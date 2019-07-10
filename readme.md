@@ -31,7 +31,7 @@ The installed nodes have more detailed information in the Node-RED info pane sho
 
 ### CI Search - `ci-search`
 
-Search a configuration item in REALTECH .4
+Search configuration items in REALTECH .4
 
 ### KPI Data Export - `saKpiRepository-export`
 

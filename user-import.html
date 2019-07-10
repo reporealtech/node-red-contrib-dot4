@@ -80,10 +80,59 @@
 
 <script type="text/x-red" data-help-name="user-import">
     <p>Import users into dot4, e.g. from an active directory.</p>
-</script>
+	<p>
+	   If you import from an Active Directory lots of the attributes are taken 
+	   into Dot4. Also some addtional CIs like company or department are created 
+	   and the relations are set.
+	</p>
+	<p>
+		In the configuration you can decide if the imported humans are created in Dot4
+		as <i>Person</i>s (meaning CIs only) or as <i>User</i>s (meaning they can login 
+		into Dot4)
+	</p>
 
-<script>
-	$( document ).ready(function() {
-		console.log( "ready!" );
-	});
+	<h3>Configuration</h3>
+    <dl class="message-properties">
+	   In the configuration of the node you must specify the URL of the Dot4 API, 
+	   your tenant name, your username and password. The API Key is only needed 
+	   at some special nodes like those concerning the saKpiRepository.
+	</dl>
+	
+	<h3>Inputs</h3>
+    <dl class="message-properties">
+      <dt>msg.payload
+        <span class="property-type">JSON object | array</span>
+      </dt>
+      <dd> A JSON object or array of JSON objects with the user data to be inserted or updated. 
+			
+		<br />
+		<br />
+		Example: <code>msg.payload = { 
+		  "firstName": "Abbi", 
+		  "lastName": "Smith",
+		  "email": "info@realtech.com"
+		} </code>
+	  </dd>
+    </dl>
+	
+	<h3>Outputs</h3>
+     <ol class="node-ports">
+         <li>Standard output
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">JSON object</span></dt>
+                 <dd>a JSON object or array that contains the CIs of the processed user(s).</dd>
+             </dl>
+         </li>
+         <li>Standard error
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">string</span></dt>
+                 <dd>the standard error of the command.</dd>
+             </dl>
+         </li>
+     </ol>
+    <h3>References</h3>
+    <ul>
+        <li><a href="https://github.com/reporealtech/node-red-contrib-dot4">GitHub</a> - the nodes github repository</li>
+    </ul>
+
 </script>
