@@ -39,7 +39,7 @@ Export data from the REALTECH .4 Service Assurance KPI Repository which also inc
 
 ### KPI Data Import - `saKpiRepository-import`
 
-Import data in the REALTECH .4 Service Assurance KPI Repository which also includes the data of SmaRT Compass.
+Import data into the REALTECH .4 Service Assurance KPI Repository which also includes the data of SmaRT Compass.
 
 ### KPI Definitions - `saKpiRepository-manageKpi`
 

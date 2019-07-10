@@ -15,6 +15,11 @@
 </script>
 
 <script type="text/x-red" data-template-name="ci-search">
+
+  <hr>
+  <h4>Node Configuration</h4>
+  <hr>
+  
     <div class="form-row">
         <label for="node-input-name"><i class="icon-tag"></i> Name</label>
         <input type="text" id="node-input-name" placeholder="Name">
@@ -32,5 +37,34 @@
 
 <script type="text/x-red" data-help-name="ci-search">
     <p>Search a configuration item in REALTECH .4</p>
-	<p>Input: msg.payload.query="contains(name,'Bernd') and ciTypeId eq 137"
+	<h3>Inputs</h3>
+    <dl class="message-properties">
+      <dt>msg.payload.query
+        <span class="property-type">string</span>
+      </dt>
+      <dd> The query which will be sent to the .4 database. <br />
+			For example: `msg.payload.query="contains(name,'Meier') and ciTypeId eq 137"`
+	  </dd>
+    </dl>
+	
+	<h3>Outputs</h3>
+     <ol class="node-ports">
+         <li>Standard output
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">JSON object</span></dt>
+                 <dd>the standard output of the command, a JSON object that contains all the information about the configuration item.</dd>
+             </dl>
+         </li>
+         <li>Standard error
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">string</span></dt>
+                 <dd>the standard error of the command.</dd>
+             </dl>
+         </li>
+     </ol>
+  <h3>References</h3>
+    <ul>
+        <li><a href="https://github.com/reporealtech/node-red-contrib-dot4">GitHub</a> - the nodes github repository</li>
+    </ul>
+	
 </script>
