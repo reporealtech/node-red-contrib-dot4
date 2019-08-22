@@ -23,13 +23,18 @@ module.exports = function(RED) {
 				  url: dot4ConfigNode.sakpirepositoryurl
 				  , apiKey: _.get(dot4ConfigNode,"credentials.apikey")
 			  }
+  			  , proxy: {
+				  url: dot4ConfigNode.proxyurl
+				  , username: dot4ConfigNode.proxyusername
+				  , password: _.get(dot4ConfigNode,"credentials.proxypassword")
+			  }
 			};
 			let repoCli;
 
 			node.on('input', async function(msg) {
 				try{
 					if(!repoCli){
-						node.log(`createDot4Client. baseUrl: ${dot4config.baseUrl}, user: ${dot4config.user}, tenant: ${dot4config.tenant}`)
+						node.log(`createDot4Client. baseUrl: ${dot4config.baseUrl}, user: ${dot4config.user}, tenant: ${dot4config.tenant}, proxy: ${JSON.stringify(dot4config.proxy)}`)
 					
 						node.status({fill:"green",shape:"ring",text:"connecting"});
 						repoCli = createDot4Client(dot4config).createSaKpiRepositoryClient()

@@ -19,6 +19,11 @@ module.exports = function(RED) {
 			  , password: _.get(dot4ConfigNode,"credentials.password")
 			  , tenant: dot4ConfigNode.tenant
 			  , baseUrl: dot4ConfigNode.url
+  			  , proxy: {
+				  url: dot4ConfigNode.proxyurl
+				  , username: dot4ConfigNode.proxyusername
+				  , password: _.get(dot4ConfigNode,"credentials.proxypassword")
+			  }
 			};
 			
 			let dot4Client
@@ -29,7 +34,7 @@ module.exports = function(RED) {
 				try{
 					
 					if(!dot4Client || !incidentManagementApi) {
-						node.log(`createDot4Client. baseUrl: ${dot4config.baseUrl}, user: ${dot4config.user}, tenant: ${dot4config.tenant}`)
+						node.log(`createDot4Client. baseUrl: ${dot4config.baseUrl}, user: ${dot4config.user}, tenant: ${dot4config.tenant}, proxy: ${JSON.stringify(dot4config.proxy)}`)
 						node.status({fill:"green",shape:"ring",text:"connecting"});
 						dot4Client = createDot4Client(dot4config);
 						await dot4Client.connect();

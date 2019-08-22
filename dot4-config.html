@@ -39,6 +39,14 @@
 				value: "",
 				required: false
 			}
+			, proxyurl: {
+				value: "",
+				required: false
+			}
+			, proxyusername: {
+				value: "",
+				required: false
+			}
         },
 		credentials: {
 		  password: {
@@ -46,6 +54,10 @@
 			required: true
 		  }
 		  , apikey: {
+			type:"password",
+			required: false
+		  }
+		  , proxypassword: {
 			type:"password",
 			required: false
 		  }
@@ -88,7 +100,7 @@
   
    <input type="hidden" id="node-config-input-sakpirepositoryurl">
   
-	  <hr>
+  <hr>
   <h5>Credentials</h5>
   <hr>
   <div class="form-row">
@@ -101,9 +113,28 @@
     <input type="password" id="node-config-input-password">
   </div>
 
-    <div class="form-row">
+  <div class="form-row">
     <label for="node-config-input-apikey"><i class="fa fa-key"></i> API Key</label>
     <input type="password" id="node-config-input-apikey" placeholder="create an API key in .4 settings">
+  </div>
+  
+  <hr>
+  <h5>Proxy (optional)</h5>
+  <hr>
+  <p>If you access the internet through a proxy server you can enter the details here.</p>
+  <div class="form-row">
+    <label for="node-config-input-proxyurl"><i class="fa fa-key"></i> URL</label>
+    <input type="text" id="node-config-input-proxyurl" placeholder="http://proxy:8080">
+  </div>
+
+  <div class="form-row">
+    <label for="node-config-input-proxyusername"><i class="icon-user"></i> Username</label>
+    <input type="text" id="node-config-input-proxyusername" placeholder="max.mustermann@musterfirma.de">
+  </div>
+
+  <div class="form-row">
+    <label for="node-config-input-proxypassword"><i class="fa fa-key"></i> Password</label>
+    <input type="password" id="node-config-input-proxypassword">
   </div>
 
 </script>
