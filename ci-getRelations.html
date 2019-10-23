@@ -1,0 +1,96 @@
+<script type="text/javascript">
+    RED.nodes.registerType('ci-getRelations',{
+        category: 'REALTECH Dot4',
+        color: '#949890',
+        defaults: {
+             dot4config: {value:"", type:"dot4-config"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "dot4.png",
+        label: function() {
+            return this.name||"ci-getRelations";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="ci-getRelations">
+
+  <hr>
+  <h4>Node Configuration</h4>
+  <hr>
+  
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+	
+	<hr>
+  <h4>REALTECH .4</h4>
+  <hr>
+  <div class="form-row">
+    <label for="node-input-dot4config"><i class="icon-bookmark"></i> Access Data</label>
+    <input type="text" id="node-input-dot4config" >
+  </div>
+  
+</script>
+
+<script type="text/x-red" data-help-name="ci-getRelations">
+    <p>Get relations of CIs in REALTECH .4</p>
+	
+	<h3>Configuration</h3>
+    <dl class="message-properties">
+	   In the configuration of the node you must specify the URL of the Dot4 API, 
+	   your tenant name, your username and password. The API Key is only needed 
+	   at some special nodes like those concerning the saKpiRepository.
+	</dl>
+	
+	<h3>Inputs</h3>
+	<ol class="node-ports">
+         <li>Configuration Item ID
+			<dl class="message-properties">
+			  <dt>msg.payload.id
+				<span class="property-type">number</span>
+			  </dt>
+			  <dd> The ID of the configuration item whose relations should be loaded.
+					<br />
+					<br />
+					Example: <code>msg.payload.id=1</code>
+			  </dd>
+			</dl>
+         </li>
+         <li>Relations Filter (optional)
+			<dl class="message-properties">
+			  <dt>msg.payload.filter
+				<span class="property-type">string</span>
+			  </dt>
+			  <dd> This optional value filters the resulting relations. 
+					<br />
+					<br />
+					Example: <code>msg.payload.filter="relationTypeId eq 11"</code>
+			  </dd>
+			</dl>
+         </li>
+     </ol>
+	
+	<h3>Outputs</h3>
+     <ol class="node-ports">
+         <li>Standard output
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">JSON object</span></dt>
+                 <dd>a JSON object that contains a count and all the relations of the CI in an array.</dd>
+             </dl>
+         </li>
+         <li>Standard error
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">string</span></dt>
+                 <dd>the standard error of the command.</dd>
+             </dl>
+         </li>
+     </ol>
+    <h3>References</h3>
+    <ul>
+        <li><a href="https://github.com/reporealtech/node-red-contrib-dot4">GitHub</a> - the nodes github repository</li>
+    </ul>
+	
+</script>
