@@ -29,6 +29,10 @@ try these options on npm install to build, if you have problems to install
 
 The installed nodes have more detailed information in the Node-RED info pane shown when the node is selected. Below is a quick summary.
 
+### CI Relations - `ci-getRelations`
+
+Load relations of configuration items in REALTECH .4
+
 ### CI Search - `ci-search`
 
 Search configuration items in REALTECH .4
