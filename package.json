@@ -1,10 +1,10 @@
 {
   "name": "node-red-contrib-dot4",
-  "version": "0.8.3",
+  "version": "0.8.4",
   "description": "provide functionality of the dot4-api-client in node-red",
   "main": "index.js",
   "dependencies": {
-    "dot4-api-client": "^1.1.55",
+    "dot4-api-client": "^1.2.2",
     "p-limit": "^2.2.0"
   },
   "keywords": [
@@ -27,8 +27,10 @@
   },
   "node-red": {
     "nodes": {
+      "ci-baseline": "ci-baseline.js",
       "ci-getRelations": "ci-getRelations.js",
       "ci-search": "ci-search.js",
+      "ci-query": "ci-query.js",
       "dot4-config": "dot4-config.js",
       "saKpiRepository-export": "saKpiRepository-export.js",
       "saKpiRepository-import": "saKpiRepository-import.js",

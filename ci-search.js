@@ -6,7 +6,7 @@ const _=require("lodash")
 ;
 
 module.exports = function(RED) {
-    function ciQuery(config) {
+    function cisearch(config) {
 
         RED.nodes.createNode(this,config)
         const node = this
@@ -42,8 +42,8 @@ module.exports = function(RED) {
 					}
 					
 					if(_.get(msg,"payload")){
-						node.status({fill:"blue",shape:"ring",text:"loading CI data"});
-						msg.payload = await configurationManagementApi.getCis(msg.payload);	
+						node.status({fill:"blue",shape:"ring",text:"searching CIs"});
+						msg.payload = await configurationManagementApi.searchCis(msg.payload);	
 						// node.log('-------------------- '+_.first(tickets))
 						node.log(`found ${_.get(msg,"payload.items.length")||0} cis in dot4`)
 						node.status({fill:"green",shape:"dot",text:"finished"});
@@ -63,5 +63,5 @@ module.exports = function(RED) {
 			});
 		}
 	}
-    RED.nodes.registerType("ci-query",ciQuery);
+    RED.nodes.registerType("ci-search",cisearch);
 }

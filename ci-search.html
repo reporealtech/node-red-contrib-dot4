@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('ci-query',{
+    RED.nodes.registerType('ci-search',{
         category: 'REALTECH Dot4',
         color: '#949890',
         defaults: {
@@ -9,12 +9,12 @@
         outputs:1,
         icon: "dot4.png",
         label: function() {
-            return this.name||"ci-query";
+            return this.name||"ci-search";
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="ci-query">
+<script type="text/x-red" data-template-name="ci-search">
 
   <hr>
   <h4>Node Configuration</h4>
@@ -35,8 +35,8 @@
   
 </script>
 
-<script type="text/x-red" data-help-name="ci-query">
-    <p>Query configuration items in REALTECH .4</p>
+<script type="text/x-red" data-help-name="ci-search">
+    <p>Search configuration items in REALTECH .4</p>
 	
 	<h3>Configuration</h3>
     <dl class="message-properties">
@@ -50,10 +50,10 @@
       <dt>msg.payload
         <span class="property-type">string</span>
       </dt>
-      <dd> The query which will be sent to the .4 database. 
+      <dd> The term which will be searched for. 
 			<br />
 			<br />
-			Example: <code>msg.payload="contains(name,'Meier') and ciTypeId eq 137"</code>
+			Example: <code>msg.payload="John Doe"</code>
 	  </dd>
     </dl>
 	

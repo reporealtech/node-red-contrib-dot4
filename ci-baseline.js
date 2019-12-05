@@ -6,7 +6,7 @@ const _=require("lodash")
 ;
 
 module.exports = function(RED) {
-    function ciQuery(config) {
+    function cibaseline(config) {
 
         RED.nodes.createNode(this,config)
         const node = this
@@ -26,26 +26,26 @@ module.exports = function(RED) {
 			};
 			
 			let dot4Client
-			, configurationManagementApi
+			, baselineManagementApi
 			;
 
 			node.on('input', async function(msg) {
 				try{
 					
-					if(!dot4Client || !configurationManagementApi) {
+					if(!dot4Client || !baselineManagementApi) {
 						node.log(`createDot4Client. baseUrl: ${dot4config.baseUrl}, user: ${dot4config.user}, tenant: ${dot4config.tenant}, proxy: ${JSON.stringify(dot4config.proxy)}`)
 						node.status({fill:"green",shape:"ring",text:"connecting"});
 						dot4Client = createDot4Client(dot4config);
 						await dot4Client.connect();
 						node.log("connected to dot4")
-						configurationManagementApi=await dot4Client.createConfigurationManagementApi()
+						baselineManagementApi=await dot4Client.createBaselineManagementApi()
 					}
 					
 					if(_.get(msg,"payload")){
-						node.status({fill:"blue",shape:"ring",text:"loading CI data"});
-						msg.payload = await configurationManagementApi.getCis(msg.payload);	
+						node.status({fill:"blue",shape:"ring",text:"baselining given CI"});
+						msg.payload = await baselineManagementApi.execBaselinesForCi(msg.payload);	
 						// node.log('-------------------- '+_.first(tickets))
-						node.log(`found ${_.get(msg,"payload.items.length")||0} cis in dot4`)
+						node.log(`executed ${_.get(msg,"payload.length")||0} baselines for the given ci`)
 						node.status({fill:"green",shape:"dot",text:"finished"});
 					} else {
 						msg.payload="msg.payload must be set."
@@ -63,5 +63,5 @@ module.exports = function(RED) {
 			});
 		}
 	}
-    RED.nodes.registerType("ci-query",ciQuery);
+    RED.nodes.registerType("ci-baseline",cibaseline);
 }

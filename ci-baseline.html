@@ -1,5 +1,5 @@
 <script type="text/javascript">
-    RED.nodes.registerType('ci-query',{
+    RED.nodes.registerType('ci-baseline',{
         category: 'REALTECH Dot4',
         color: '#949890',
         defaults: {
@@ -9,12 +9,12 @@
         outputs:1,
         icon: "dot4.png",
         label: function() {
-            return this.name||"ci-query";
+            return this.name||"ci-baseline";
         }
     });
 </script>
 
-<script type="text/x-red" data-template-name="ci-query">
+<script type="text/x-red" data-template-name="ci-baseline">
 
   <hr>
   <h4>Node Configuration</h4>
@@ -35,8 +35,8 @@
   
 </script>
 
-<script type="text/x-red" data-help-name="ci-query">
-    <p>Query configuration items in REALTECH .4</p>
+<script type="text/x-red" data-help-name="ci-baseline">
+    <p>For a given configuration item execute all its baselines in REALTECH .4</p>
 	
 	<h3>Configuration</h3>
     <dl class="message-properties">
@@ -48,12 +48,12 @@
 	<h3>Inputs</h3>
     <dl class="message-properties">
       <dt>msg.payload
-        <span class="property-type">string</span>
+        <span class="property-type">string | number | object</span>
       </dt>
-      <dd> The query which will be sent to the .4 database. 
+      <dd> The configuration item as object or its ID
 			<br />
 			<br />
-			Example: <code>msg.payload="contains(name,'Meier') and ciTypeId eq 137"</code>
+			Example: <code>msg.payload=17</code>
 	  </dd>
     </dl>
 	
@@ -62,7 +62,7 @@
          <li>Standard output
              <dl class="message-properties">
                  <dt>payload <span class="property-type">JSON object</span></dt>
-                 <dd>a JSON object that contains all the information about the found configuration item(s).</dd>
+                 <dd>a JSON object that contains the baseline results for the given configuration item.</dd>
              </dl>
          </li>
          <li>Standard error
