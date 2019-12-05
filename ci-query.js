@@ -6,7 +6,7 @@ const _=require("lodash")
 ;
 
 module.exports = function(RED) {
-    function ciSearch(config) {
+    function ciQuery(config) {
 
         RED.nodes.createNode(this,config)
         const node = this
@@ -63,5 +63,5 @@ module.exports = function(RED) {
 			});
 		}
 	}
-    RED.nodes.registerType("ci-search",ciSearch);
+    RED.nodes.registerType("ci-query",ciQuery);
 }
