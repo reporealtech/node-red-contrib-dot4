@@ -41,3 +41,4 @@ package-lock.json
 
 # test file
 mochawesome-report
+/copyrightizen.config.js
