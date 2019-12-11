@@ -39,7 +39,7 @@ Query configuration items in REALTECH .4
 
 ### CI Search - `ci-search`
 
-Search configuration items in REALTECH .4
+Fulltext search of configuration items in REALTECH .4
 
 ### KPI Data Export - `saKpiRepository-export`
 
