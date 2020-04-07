@@ -50,7 +50,14 @@ module.exports = function(RED) {
 					
 					if(_.get(msg,"payload")){
 						node.status({fill:"blue",shape:"ring",text:"searching CIs"});
-						msg.payload = await configurationManagementApi.searchCis(msg.payload);	
+						// msg.payload = await configurationManagementApi.searchCis(msg.payload);	
+						const searchTerm=typeof msg.payload=='string'?msg.payload : _.get(msg,'payload.searchTerm')
+						, fuzziness=_.get(msg,'payload.fuzziness') || -1
+						, ciTypeIds=_.get(msg,'payload.ciTypeIds') || []
+						, skip=_.get(msg,'payload.skip') || 0
+						, top=_.get(msg,'payload.top') || 3
+						;
+						msg.payload = await configurationManagementApi.searchCis(searchTerm, fuzziness, ciTypeIds, skip, top);	
 						// node.log('-------------------- '+_.first(tickets))
 						node.log(`found ${_.get(msg,"payload.items.length")||0} cis in dot4`)
 						node.status({fill:"green",shape:"dot",text:"finished"});
