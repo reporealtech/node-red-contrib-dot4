@@ -32,8 +32,6 @@ module.exports = function(RED) {
 			  }
 			};
 
-      node.log('init dot4 Client')
-
 			let dot4Client
 			, configurationManagementApi
 			;
@@ -50,7 +48,7 @@ module.exports = function(RED) {
 						configurationManagementApi=await dot4Client.createConfigurationManagementApi()
 					}
 
-					if(_.get(msg,"payload")){
+					if(_.get(msg,"payload")) {
 						node.status({fill:"blue",shape:"ring",text:"searching CIs"});
 						// msg.payload = await configurationManagementApi.searchCis(msg.payload);
 						const searchTerm=typeof msg.payload=='string'?msg.payload : _.get(msg,'payload.searchTerm')
