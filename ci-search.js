@@ -32,7 +32,7 @@ module.exports = function(RED) {
 			  }
 			};
 
-      node.log(`init dot4 Client`)
+      node.log('init dot4 Client')
 
 			let dot4Client
 			, configurationManagementApi
