@@ -18,7 +18,7 @@ module.exports = function(RED) {
         RED.nodes.createNode(this,config)
         const node = this
 		, dot4ConfigNode = RED.nodes.getNode(config.dot4config);
-		
+
 		if(dot4ConfigNode){
 			const dot4config = {
 			  user: dot4ConfigNode.username
@@ -31,14 +31,16 @@ module.exports = function(RED) {
 				  , password: _.get(dot4ConfigNode,"credentials.proxypassword")
 			  }
 			};
-			
+
+      node.log(`init dot4 Client`)
+
 			let dot4Client
 			, configurationManagementApi
 			;
 
 			node.on('input', async function(msg) {
 				try{
-					
+
 					if(!dot4Client || !configurationManagementApi) {
 						node.log(`createDot4Client. baseUrl: ${dot4config.baseUrl}, user: ${dot4config.user}, tenant: ${dot4config.tenant}, proxy: ${JSON.stringify(dot4config.proxy)}`)
 						node.status({fill:"green",shape:"ring",text:"connecting"});
@@ -47,17 +49,17 @@ module.exports = function(RED) {
 						node.log("connected to dot4")
 						configurationManagementApi=await dot4Client.createConfigurationManagementApi()
 					}
-					
+
 					if(_.get(msg,"payload")){
 						node.status({fill:"blue",shape:"ring",text:"searching CIs"});
-						// msg.payload = await configurationManagementApi.searchCis(msg.payload);	
+						// msg.payload = await configurationManagementApi.searchCis(msg.payload);
 						const searchTerm=typeof msg.payload=='string'?msg.payload : _.get(msg,'payload.searchTerm')
 						, fuzziness=_.get(msg,'payload.fuzziness') || -1
 						, ciTypeIds=_.get(msg,'payload.ciTypeIds') || []
 						, skip=_.get(msg,'payload.skip') || 0
 						, top=_.get(msg,'payload.top') || 3
 						;
-						msg.payload = await configurationManagementApi.searchCis(searchTerm, fuzziness, ciTypeIds, skip, top);	
+						msg.payload = await configurationManagementApi.searchCis(searchTerm, fuzziness, ciTypeIds, skip, top);
 						// node.log('-------------------- '+_.first(tickets))
 						node.log(`found ${_.get(msg,"payload.items.length")||0} cis in dot4`)
 						node.status({fill:"green",shape:"dot",text:"finished"});
@@ -65,7 +67,7 @@ module.exports = function(RED) {
 						msg.payload="msg.payload must be set."
 						node.status({fill:"red",shape:"dot",text:"finished"});
 					}
-										
+
 					node.send(msg)
 					// node.log(msg.payload)
 				} catch(e) {
