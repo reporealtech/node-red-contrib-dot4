@@ -1,0 +1,88 @@
+<!--
+  - @copyright Copyright (C) REALTECH AG, Germany - All Rights Reserved
+  -  Unauthorized copying of this file, via any medium is strictly prohibited
+  -  Proprietary and confidential
+  -  Written by Tobias Ceska <tobias.ceska@realtech.com>, December 2019
+  -->
+
+<script type="text/javascript">
+    RED.nodes.registerType('ci-update',{
+        category: 'REALTECH Dot4',
+        color: '#949890',
+        defaults: {
+             dot4config: {value:"", type:"dot4-config"}
+        },
+        inputs:1,
+        outputs:1,
+        icon: "dot4.png",
+        label: function() {
+            return this.name||"ci-update";
+        }
+    });
+</script>
+
+<script type="text/x-red" data-template-name="ci-update">
+
+  <hr>
+  <h4>Node Configuration</h4>
+  <hr>
+  
+    <div class="form-row">
+        <label for="node-input-name"><i class="icon-tag"></i> Name</label>
+        <input type="text" id="node-input-name" placeholder="Name">
+    </div>
+	
+	<hr>
+  <h4>REALTECH .4</h4>
+  <hr>
+  <div class="form-row">
+    <label for="node-input-dot4config"><i class="icon-bookmark"></i> Access Data</label>
+    <input type="text" id="node-input-dot4config" >
+  </div>
+
+</script>
+
+<script type="text/x-red" data-help-name="tci-update">
+    <p>Start a ticket in REALTECH .4</p>
+	
+	<h3>Configuration</h3>
+    <dl class="message-properties">
+	   In the configuration of the node you must specify the URL of the Dot4 API, 
+	   your tenant name, your username and password. The API Key is only needed 
+	   at some special nodes like those concerning the saKpiRepository.
+	</dl>
+	
+	<h3>Inputs</h3>
+    <dl class="message-properties">
+      <dt>msg.payload
+        <span class="property-type">JSON object</span>
+      </dt>
+      <dd> A JSON object that contains the ticket data in the keys <code>name</code> and <code>description</code>. 
+			<br />
+			<br />
+			Example: <code>msg.payload = { "name": "Network Problems", "description": "I cannot connect to the internet." } </code>
+	  </dd>
+    </dl>
+	
+	<h3>Outputs</h3>
+     <ol class="node-ports">
+         <li>Standard output
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">JSON object</span></dt>
+                 <dd>a JSON object that contains all the information about the created ticket CI.</dd>
+             </dl>
+         </li>
+         <li>Standard error
+             <dl class="message-properties">
+                 <dt>payload <span class="property-type">string</span></dt>
+                 <dd>the standard error of the command.</dd>
+             </dl>
+         </li>
+     </ol>
+    <h3>References</h3>
+    <ul>
+        <li><a href="https://github.com/reporealtech/node-red-contrib-dot4">GitHub</a> - the nodes github repository</li>
+    </ul>
+	
+
+</script>

@@ -1,10 +1,10 @@
 {
   "name": "node-red-contrib-dot4",
-  "version": "0.8.18",
+  "version": "0.8.19",
   "description": "provide functionality of the dot4-api-client in node-red",
   "main": "index.js",
   "dependencies": {
-    "dot4-api-client": "^1.2.20",
+    "dot4-api-client": "^1.2.21",
     "moment": "^2.24.0",
     "p-limit": "^2.2.0"
   },
@@ -30,14 +30,17 @@
   },
   "node-red": {
     "nodes": {
+      "add-comment-to-ticket": "add-comment-to-ticket.js",
       "ci-baseline": "ci-baseline.js",
       "ci-getRelations": "ci-getRelations.js",
       "ci-search": "ci-search.js",
       "ci-query": "ci-query.js",
+      "ci-update": "ci-update.js",
       "dot4-config": "dot4-config.js",
       "saKpiRepository-export": "saKpiRepository-export.js",
       "saKpiRepository-import": "saKpiRepository-import.js",
       "saKpiRepository-manageKpi": "saKpiRepository-manageKpi.js",
+      "servicerequest-create": "servicerequest-create.js",
       "ticket-create": "ticket-create.js",
       "ticket-export": "ticket-export.js",
       "ticket-upsert": "ticket-upsert.js",

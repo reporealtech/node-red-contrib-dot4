@@ -116,7 +116,7 @@ module.exports = function(RED) {
 						
 							node.log(`###update CI  with id [${incident.id}], named [${incident.name}]`)
 							if(incident.ciTypeId)
-								uploadRes=await incidentManagementApi.updateCi(incident)
+								uploadRes=await incidentManagementApi.updateCi(incident, false)
 							else
 								uploadRes=await incidentManagementApi.updateIncident(incident)
 							// node.log(JSON.stringify(uploadRes))
