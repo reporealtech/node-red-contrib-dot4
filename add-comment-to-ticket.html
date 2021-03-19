@@ -57,10 +57,11 @@
       <dt>msg.payload
         <span class="property-type">JSON object</span>
       </dt>
-      <dd> A JSON object that contains the ticket data in the keys <code>name</code> and <code>description</code>. 
+      <dd> A JSON object that contains the ticket and comment data in the following keys: <code>ticketId</code>, <code>comment</code> and <code>type</code>. 
+	  <code>type</code> can be one of ["private", "public", "portal"]. 
 			<br />
 			<br />
-			Example: <code>msg.payload = { "name": "Network Problems", "description": "I cannot connect to the internet." } </code>
+			Example: <code>msg.payload = { "ticketId": 37, "comment": "I updated your ticket.", "type": "public" } </code>
 	  </dd>
     </dl>
 	
@@ -69,7 +70,7 @@
          <li>Standard output
              <dl class="message-properties">
                  <dt>payload <span class="property-type">JSON object</span></dt>
-                 <dd>a JSON object that contains all the information about the created ticket CI.</dd>
+                 <dd>a JSON object that contains the results.</dd>
              </dl>
          </li>
          <li>Standard error

@@ -48,11 +48,17 @@ module.exports = function(RED) {
 					}
 
 					if(_.get(msg,"payload")) {
-						node.status({fill:"blue",shape:"ring",text:"updating CIs"});
+						node.status({fill:"blue",shape:"ring",text:"updating CI"});
 						
-						const ci = await configurationManagementApi.getCi(msg.payload.ciId);
-						_.set(ci, msg.payload.technicalName, msg.payload.value);
-						msg.payload = await configurationManagementApi.updateCi(ci, false);
+						const ci = await configurationManagementApi.getCi(msg.payload.ciId || msg.payload.id);
+						if(msg.payload.technicalName && msg.payload.value){
+							_.set(ci, msg.payload.technicalName, msg.payload.value);
+						} else {
+							_.forEach(msg.payload, (v,k)=>{
+								_.set(ci, k, v)
+							})
+						}
+						msg.payload = await configurationManagementApi.updateCi(ci);
 						node.log("updated ci")
 						node.status({fill:"green",shape:"dot",text:"finished"});
 					} else {
